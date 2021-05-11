@@ -1,0 +1,211 @@
+object dmPgEngine: TdmPgEngine
+  OldCreateOrder = False
+  Height = 739
+  HorizontalOffset = 3056
+  VerticalOffset = 1269
+  Width = 667
+  PPI = 144
+  object DataSource1: TDataSource
+    DataSet = PQQuery
+    Left = 108
+    Top = 48
+  end
+  object PQConn: TPQConnection
+    Connected = True
+    LoginPrompt = False
+    DatabaseName = 'timetable'
+    KeepConnection = False
+    Password = 'farata'
+    Transaction = SQLTransaction1
+    UserName = 'pasha'
+    OnLog = PQConnLog
+    Left = 108
+    Top = 312
+  end
+  object PQQuery: TSQLQuery
+    PacketRecords = -1
+    IndexName = 'DEFAULT_ORDER'
+    MaxIndexesCount = 5
+    FieldDefs = <    
+      item
+        Name = 'chain_id'
+        DataType = ftLargeint
+        Precision = -1
+      end    
+      item
+        Name = 'task_id'
+        DataType = ftLargeint
+        Precision = -1
+      end    
+      item
+        Name = 'chain_name'
+        DataType = ftMemo
+        Precision = -1
+      end    
+      item
+        Name = 'run_at'
+        DataType = ftMemo
+        Precision = -1
+      end    
+      item
+        Name = 'max_instances'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'live'
+        DataType = ftBoolean
+        Precision = -1
+      end    
+      item
+        Name = 'self_destruct'
+        DataType = ftBoolean
+        Precision = -1
+      end    
+      item
+        Name = 'exclusive_execution'
+        DataType = ftBoolean
+        Precision = -1
+      end    
+      item
+        Name = 'client_name'
+        DataType = ftMemo
+        Precision = -1
+      end>
+    Active = True
+    Database = PQConn
+    Transaction = SQLTransaction1
+    SQL.Strings = (
+      'SELECT'
+      '  chain_id,'
+      '  task_id,'
+      '  chain_name,'
+      '  COALESCE(run_at, ''* * * * *'') as run_at,'
+      '  max_instances,'
+      '  live,'
+      '  self_destruct,'
+      '  exclusive_execution,'
+      '  client_name'
+      'FROM timetable.chain;'
+    )
+    UpdateSQL.Strings = (
+      'UPDATE timetable.chain'
+      'SET'
+      #9'"task_id"=:"task_id",'
+      #9'"chain_name"=:"chain_name",'
+      #9'"run_at"=:"run_at",'
+      #9'"max_instances"=:"max_instances",'
+      #9'"live"=:"live",'
+      #9'"self_destruct"=:"self_destruct",'
+      #9'"exclusive_execution"=:"exclusive_execution",'
+      #9'"client_name"=:"client_name"'
+      'WHERE'
+      #9'"chain_id"= :"OLD_chain_id"'
+    )
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit, sqoRefreshUsingSelect]
+    Params = <>
+    UsePrimaryKeyAsKey = False
+    Left = 104
+    Top = 176
+    object PQQuerychain_id: TLargeintField
+      FieldKind = fkData
+      FieldName = 'chain_id'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object PQQuerytask_id: TLargeintField
+      FieldKind = fkData
+      FieldName = 'task_id'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object PQQuerychain_name: TMemoField
+      FieldKind = fkData
+      FieldName = 'chain_name'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      OnGetText = PQQuerychain_nameGetText
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object PQQueryrun_at: TMemoField
+      FieldKind = fkData
+      FieldName = 'run_at'
+      Index = 3
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      OnGetText = PQQuerychain_nameGetText
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object PQQuerymax_instances: TLongintField
+      FieldKind = fkData
+      FieldName = 'max_instances'
+      Index = 4
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object PQQuerylive: TBooleanField
+      FieldKind = fkData
+      FieldName = 'live'
+      Index = 5
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      DisplayValues = 'True;False'
+    end
+    object PQQueryself_destruct: TBooleanField
+      FieldKind = fkData
+      FieldName = 'self_destruct'
+      Index = 6
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      DisplayValues = 'True;False'
+    end
+    object PQQueryexclusive_execution: TBooleanField
+      FieldKind = fkData
+      FieldName = 'exclusive_execution'
+      Index = 7
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      DisplayValues = 'True;False'
+    end
+    object PQQueryclient_name: TMemoField
+      FieldKind = fkData
+      FieldName = 'client_name'
+      Index = 8
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      OnGetText = PQQuerychain_nameGetText
+      BlobType = ftMemo
+      Transliterate = False
+    end
+  end
+  object SQLTransaction1: TSQLTransaction
+    Active = True
+    Database = PQConn
+    Options = [stoUseImplicit]
+    Left = 216
+    Top = 312
+  end
+end
