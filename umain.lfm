@@ -31,7 +31,7 @@ object fmMain: TfmMain
         ButtonStyle = cbsEllipsis
         MaxSize = 300
         Title.Caption = 'Chain Name'
-        Width = 200
+        Width = 111
         FieldName = 'chain_name'
       end    
       item
@@ -174,9 +174,6 @@ object fmMain: TfmMain
     Height = 495
     Top = 488
     Width = 656
-    Lines.Strings = (
-      'mmLog'
-    )
     ScrollBars = ssAutoVertical
     TabOrder = 3
   end

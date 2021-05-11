@@ -19,6 +19,7 @@ object dmPgEngine: TdmPgEngine
     Transaction = SQLTransaction1
     UserName = 'pasha'
     OnLog = PQConnLog
+    LogEvents = [detParamValue, detActualSQL]
     Left = 108
     Top = 312
   end
@@ -86,7 +87,8 @@ object dmPgEngine: TdmPgEngine
       '  self_destruct,'
       '  exclusive_execution,'
       '  client_name'
-      'FROM timetable.chain;'
+      'FROM timetable.chain'
+      'ORDER BY chain_id'
     )
     UpdateSQL.Strings = (
       'UPDATE timetable.chain'
@@ -104,6 +106,7 @@ object dmPgEngine: TdmPgEngine
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit, sqoRefreshUsingSelect]
     Params = <>
+    ParseSQL = False
     UsePrimaryKeyAsKey = False
     Left = 104
     Top = 176
