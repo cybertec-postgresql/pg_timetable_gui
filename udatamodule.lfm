@@ -1,32 +1,32 @@
 object dmPgEngine: TdmPgEngine
   OldCreateOrder = False
-  Height = 739
-  HorizontalOffset = 3056
-  VerticalOffset = 1269
+  Height = 523
+  HorizontalOffset = 1475
+  VerticalOffset = 375
   Width = 667
   PPI = 144
-  object DataSource1: TDataSource
-    DataSet = PQQuery
+  object dsChains: TDataSource
+    DataSet = qryChains
     Left = 108
     Top = 48
   end
   object PQConn: TPQConnection
-    Connected = True
+    Connected = False
     LoginPrompt = False
     DatabaseName = 'timetable'
     KeepConnection = False
     Password = 'farata'
-    Transaction = SQLTransaction1
+    Transaction = transChains
     UserName = 'pasha'
     OnLog = PQConnLog
     LogEvents = [detParamValue, detActualSQL]
-    Left = 108
+    Left = 104
     Top = 312
   end
-  object PQQuery: TSQLQuery
+  object qryChains: TSQLQuery
     PacketRecords = -1
     IndexName = 'DEFAULT_ORDER'
-    MaxIndexesCount = 5
+    MaxIndexesCount = 10
     FieldDefs = <    
       item
         Name = 'chain_id'
@@ -40,8 +40,9 @@ object dmPgEngine: TdmPgEngine
       end    
       item
         Name = 'chain_name'
-        DataType = ftMemo
+        DataType = ftString
         Precision = -1
+        Size = 255
       end    
       item
         Name = 'run_at'
@@ -73,14 +74,13 @@ object dmPgEngine: TdmPgEngine
         DataType = ftMemo
         Precision = -1
       end>
-    Active = True
     Database = PQConn
-    Transaction = SQLTransaction1
+    Transaction = transChains
     SQL.Strings = (
       'SELECT'
       '  chain_id,'
       '  task_id,'
-      '  chain_name,'
+      '  CAST(chain_name AS varchar(255)) as chain_name,'
       '  COALESCE(run_at, ''* * * * *'') as run_at,'
       '  max_instances,'
       '  live,'
@@ -106,109 +106,91 @@ object dmPgEngine: TdmPgEngine
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit, sqoRefreshUsingSelect]
     Params = <>
+    ParamCheck = False
     ParseSQL = False
     UsePrimaryKeyAsKey = False
     Left = 104
     Top = 176
-    object PQQuerychain_id: TLargeintField
-      FieldKind = fkData
-      FieldName = 'chain_id'
-      Index = 0
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-    end
-    object PQQuerytask_id: TLargeintField
-      FieldKind = fkData
-      FieldName = 'task_id'
-      Index = 1
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-    end
-    object PQQuerychain_name: TMemoField
-      FieldKind = fkData
-      FieldName = 'chain_name'
-      Index = 2
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-      OnGetText = PQQuerychain_nameGetText
-      BlobType = ftMemo
-      Transliterate = False
-    end
-    object PQQueryrun_at: TMemoField
-      FieldKind = fkData
-      FieldName = 'run_at'
-      Index = 3
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-      OnGetText = PQQuerychain_nameGetText
-      BlobType = ftMemo
-      Transliterate = False
-    end
-    object PQQuerymax_instances: TLongintField
-      FieldKind = fkData
-      FieldName = 'max_instances'
-      Index = 4
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-    end
-    object PQQuerylive: TBooleanField
-      FieldKind = fkData
-      FieldName = 'live'
-      Index = 5
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-      DisplayValues = 'True;False'
-    end
-    object PQQueryself_destruct: TBooleanField
-      FieldKind = fkData
-      FieldName = 'self_destruct'
-      Index = 6
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-      DisplayValues = 'True;False'
-    end
-    object PQQueryexclusive_execution: TBooleanField
-      FieldKind = fkData
-      FieldName = 'exclusive_execution'
-      Index = 7
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-      DisplayValues = 'True;False'
-    end
-    object PQQueryclient_name: TMemoField
-      FieldKind = fkData
-      FieldName = 'client_name'
-      Index = 8
-      LookupCache = False
-      ProviderFlags = [pfInUpdate, pfInWhere]
-      ReadOnly = False
-      Required = False
-      OnGetText = PQQuerychain_nameGetText
-      BlobType = ftMemo
-      Transliterate = False
-    end
   end
-  object SQLTransaction1: TSQLTransaction
-    Active = True
+  object transChains: TSQLTransaction
+    Active = False
     Database = PQConn
     Options = [stoUseImplicit]
-    Left = 216
+    Left = 192
     Top = 312
+  end
+  object qryTasks: TSQLQuery
+    PacketRecords = -1
+    IndexName = 'DEFAULT_ORDER'
+    MaxIndexesCount = 4
+    FieldDefs = <    
+      item
+        Name = 'task_id'
+        DataType = ftLargeint
+        Precision = -1
+      end    
+      item
+        Name = 'command'
+        DataType = ftMemo
+        Precision = -1
+      end    
+      item
+        Name = 'kind'
+        DataType = ftString
+        Precision = -1
+        Size = 64
+      end    
+      item
+        Name = 'run_as'
+        DataType = ftMemo
+        Precision = -1
+      end    
+      item
+        Name = 'ignore_error'
+        DataType = ftBoolean
+        Precision = -1
+      end    
+      item
+        Name = 'autonomous'
+        DataType = ftBoolean
+        Precision = -1
+      end    
+      item
+        Name = 'connect_string'
+        DataType = ftMemo
+        Precision = -1
+      end>
+    Database = PQConn
+    Transaction = transChains
+    SQL.Strings = (
+      'WITH RECURSIVE x'
+      '(task_id, command, kind, run_as, ignore_error, autonomous, connect_string)'
+      'AS ('
+      #9'SELECT tc.task_id, tc.command, tc.kind, tc.run_as, tc.ignore_error, tc.autonomous, tc.database_connection'
+      #9'FROM timetable.task tc'
+      #9'WHERE tc.parent_id IS NULL AND tc.task_id = :"task_id"'
+      'UNION ALL'
+      #9'SELECT tc.task_id, tc.command, tc.kind, tc.run_as, tc.ignore_error, tc.autonomous, tc.database_connection'
+      #9'FROM timetable.task tc JOIN x ON (x.task_id = tc.parent_id)'
+      ')'
+      #9'SELECT * FROM x'
+    )
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit, sqoRefreshUsingSelect]
+    Params = <    
+      item
+        DataType = ftLargeint
+        Name = 'task_id'
+        ParamType = ptInput
+        Size = 8
+      end>
+    UpdateMode = upWhereAll
+    DataSource = dsChains
+    Left = 192
+    Top = 176
+  end
+  object dsTasks: TDataSource
+    DataSet = qryTasks
+    Left = 192
+    Top = 48
   end
 end

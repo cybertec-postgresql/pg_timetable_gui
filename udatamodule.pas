@@ -12,22 +12,15 @@ type
   { TdmPgEngine }
 
   TdmPgEngine = class(TDataModule)
-    DataSource1: TDataSource;
+    dsTasks: TDataSource;
+    dsChains: TDataSource;
     PQConn: TPQConnection;
-    PQQuery: TSQLQuery;
-    PQQuerychain_id: TLargeintField;
-    PQQuerychain_name: TMemoField;
-    PQQueryclient_name: TMemoField;
-    PQQueryexclusive_execution: TBooleanField;
-    PQQuerylive: TBooleanField;
-    PQQuerymax_instances: TLongintField;
-    PQQueryrun_at: TMemoField;
-    PQQueryself_destruct: TBooleanField;
-    PQQuerytask_id: TLargeintField;
-    SQLTransaction1: TSQLTransaction;
+    qryChains: TSQLQuery;
+    qryTasks: TSQLQuery;
+    transChains: TSQLTransaction;
     procedure PQConnLog(Sender: TSQLConnection; EventType: TDBEventType;
       const Msg: String);
-    procedure PQQuerychain_nameGetText(Sender: TField; var aText: string;
+    procedure qryChainschain_nameGetText(Sender: TField; var aText: string;
       DisplayText: Boolean);
   private
   public
@@ -53,7 +46,7 @@ begin
   uMain.fmMain.mmLog.Lines.Append('----------------------------------------------------');
 end;
 
-procedure TdmPgEngine.PQQuerychain_nameGetText(Sender: TField;
+procedure TdmPgEngine.qryChainschain_nameGetText(Sender: TField;
   var aText: string; DisplayText: Boolean);
 begin
   aText := Sender.AsString;
@@ -61,7 +54,8 @@ end;
 
 procedure TdmPgEngine.Connect;
 begin
-  PQQuery.Open;
+  qryChains.Open;
+  qryTasks.Open;
 end;
 
 procedure TdmPgEngine.Disconnect;
