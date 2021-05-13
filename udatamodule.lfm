@@ -1,14 +1,14 @@
 object dmPgEngine: TdmPgEngine
   OldCreateOrder = False
-  Height = 523
-  HorizontalOffset = 1475
-  VerticalOffset = 375
-  Width = 667
-  PPI = 144
+  Height = 436
+  HorizontalOffset = 489
+  VerticalOffset = 392
+  Width = 556
+  PPI = 120
   object dsChains: TDataSource
     DataSet = qryChains
-    Left = 108
-    Top = 48
+    Left = 90
+    Top = 40
   end
   object PQConn: TPQConnection
     Connected = False
@@ -20,8 +20,8 @@ object dmPgEngine: TdmPgEngine
     UserName = 'pasha'
     OnLog = PQConnLog
     LogEvents = [detParamValue, detActualSQL]
-    Left = 104
-    Top = 312
+    Left = 87
+    Top = 260
   end
   object qryChains: TSQLQuery
     PacketRecords = -1
@@ -109,15 +109,15 @@ object dmPgEngine: TdmPgEngine
     ParamCheck = False
     ParseSQL = False
     UsePrimaryKeyAsKey = False
-    Left = 104
-    Top = 176
+    Left = 87
+    Top = 147
   end
   object transChains: TSQLTransaction
     Active = False
     Database = PQConn
     Options = [stoUseImplicit]
-    Left = 192
-    Top = 312
+    Left = 160
+    Top = 260
   end
   object qryTasks: TSQLQuery
     PacketRecords = -1
@@ -185,12 +185,12 @@ object dmPgEngine: TdmPgEngine
       end>
     UpdateMode = upWhereAll
     DataSource = dsChains
-    Left = 192
-    Top = 176
+    Left = 160
+    Top = 147
   end
   object dsTasks: TDataSource
     DataSet = qryTasks
-    Left = 192
-    Top = 48
+    Left = 160
+    Top = 40
   end
 end
