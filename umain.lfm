@@ -17,6 +17,7 @@ object fmMain: TfmMain
     Top = 0
     Width = 320
     Align = alLeft
+    AlternateColor = 16577773
     AutoFillColumns = True
     CellHintPriority = chpAll
     Color = clWindow
@@ -66,6 +67,7 @@ object fmMain: TfmMain
       Top = 264
       Width = 926
       Align = alClient
+      AlternateColor = 16577773
       AutoFillColumns = True
       Color = clWindow
       Columns = <      
