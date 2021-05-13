@@ -36,7 +36,8 @@ type
     miHelp: TMenuItem;
     miAbout: TMenuItem;
     pnlDetails: TPanel;
-    Splitter1: TSplitter;
+    splitSidebar: TSplitter;
+    splitDetails: TSplitter;
     procedure btnApplyClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure ConnectClick(Sender: TObject);
@@ -75,8 +76,8 @@ end;
 
 procedure TfmMain.gridChainsTitleClick(Column: TColumn);
 const
-  ImageArrowUp = 3; //should match image in imagelist
-  ImageArrowDown = 4; //should match image in imagelist
+  imgArrowUp = 3;
+  imgArrowDown = 4;
 var
   ASC_IndexName, DESC_IndexName: string;
   AQuery: TSQLQuery;
@@ -115,12 +116,12 @@ begin
   Column.Tag := not Column.Tag;
   if boolean(Column.Tag) then
   begin
-    Column.Title.ImageIndex := ImageArrowUp;
+    Column.Title.ImageIndex := imgArrowUp;
     AQuery.IndexName := ASC_IndexName;
   end
   else
   begin
-    Column.Title.ImageIndex := ImageArrowDown;
+    Column.Title.ImageIndex := imgArrowDown;
     AQuery.IndexName := DESC_IndexName;
   end;
   // Remove the sort arrow from the previous column we sorted

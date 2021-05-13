@@ -57,18 +57,17 @@ object fmMain: TfmMain
     Top = 0
     Width = 930
     Align = alClient
-    BevelInner = bvSpace
     BevelWidth = 2
     ClientHeight = 854
     ClientWidth = 930
     ParentFont = False
     TabOrder = 1
     object gridTasks: TDBGrid
-      Left = 4
-      Height = 598
-      Top = 252
-      Width = 922
-      Align = alBottom
+      Left = 2
+      Height = 590
+      Top = 262
+      Width = 926
+      Align = alClient
       AutoFillColumns = True
       Color = clWindow
       Columns = <      
@@ -90,7 +89,7 @@ object fmMain: TfmMain
           )
           Title.ImageIndex = 1
           Title.Caption = 'Kind'
-          Width = 150
+          Width = 151
           FieldName = 'kind'
         end      
         item
@@ -98,35 +97,35 @@ object fmMain: TfmMain
           MinSize = 8
           MaxSize = 83
           Title.Caption = 'Command'
-          Width = 150
+          Width = 151
           FieldName = 'command'
         end      
         item
           MinSize = 8
           MaxSize = 167
           Title.Caption = 'Ignore Error'
-          Width = 150
+          Width = 151
           FieldName = 'ignore_error'
         end      
         item
           MinSize = 8
           MaxSize = 167
           Title.Caption = 'Autonomous'
-          Width = 150
+          Width = 151
           FieldName = 'autonomous'
         end      
         item
           MinSize = 8
           MaxSize = 167
           Title.Caption = 'Run As'
-          Width = 150
+          Width = 151
           FieldName = 'run_as'
         end      
         item
           MinSize = 8
           MaxSize = 167
           Title.Caption = 'Connection String'
-          Width = 153
+          Width = 152
           FieldName = 'connect_string'
         end>
       DataSource = dmPgEngine.dsTasks
@@ -140,12 +139,14 @@ object fmMain: TfmMain
     end
     object gbChain: TGroupBox
       Left = 7
-      Height = 247
+      Height = 238
       Top = 7
-      Width = 380
+      Width = 916
+      Align = alTop
+      BorderSpacing.Around = 5
       Caption = ' Chain Properties '
-      ClientHeight = 222
-      ClientWidth = 376
+      ClientHeight = 213
+      ClientWidth = 912
       ParentFont = False
       TabOrder = 1
       object lblChainID: TDBText
@@ -272,18 +273,28 @@ object fmMain: TfmMain
         ParentFont = False
         TabOrder = 5
       end
+      object mmLog: TMemo
+        Left = 384
+        Height = 200
+        Top = 4
+        Width = 518
+        Align = alCustom
+        ParentFont = False
+        ScrollBars = ssAutoVertical
+        TabOrder = 7
+      end
     end
-    object mmLog: TMemo
-      Left = 393
-      Height = 240
-      Top = 13
-      Width = 520
-      ParentFont = False
-      ScrollBars = ssAutoVertical
-      TabOrder = 2
+    object splitDetails: TSplitter
+      Cursor = crVSplit
+      Left = 2
+      Height = 12
+      Top = 250
+      Width = 926
+      Align = alTop
+      ResizeAnchor = akTop
     end
   end
-  object Splitter1: TSplitter
+  object splitSidebar: TSplitter
     Left = 320
     Height = 854
     Top = 0
