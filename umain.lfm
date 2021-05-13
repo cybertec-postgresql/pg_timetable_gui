@@ -9,7 +9,7 @@ object fmMain: TfmMain
   DesignTimePPI = 120
   Menu = menuMain
   OnCloseQuery = FormCloseQuery
-  OnShow = ConnectClick
+  OnShow = FormShow
   LCLVersion = '2.0.12.0'
   object gridChains: TDBGrid
     Left = 0
@@ -18,35 +18,33 @@ object fmMain: TfmMain
     Width = 320
     Align = alLeft
     AutoFillColumns = True
+    CellHintPriority = chpAll
     Color = clWindow
     Columns = <    
       item
         MinSize = 8
         MaxSize = 21
         Title.Caption = 'Chain Name'
-        Width = 234
+        Width = 204
         FieldName = 'chain_name'
       end    
       item
         Alignment = taCenter
-        MinSize = 8
-        MaxSize = 167
-        PickList.Strings = (
-          '* * * * *'
-          '@every 30 seconds'
-          '@reboot'
-        )
+        ButtonStyle = cbsCheckboxColumn
+        MinSize = 200
         SizePriority = 0
         Title.Alignment = taCenter
         Title.Caption = 'Enabled'
-        Width = 67
+        Width = 100
         FieldName = 'live'
       end>
     DataSource = dmPgEngine.dsChains
     DefaultRowHeight = 26
-    Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderHotTracking, dgHeaderPushedLook, dgRowHighlight, dgDisplayMemoText]
+    Flat = True
+    Options = [dgEditing, dgTitles, dgIndicator, dgColumnMove, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderHotTracking, dgHeaderPushedLook, dgCellHints, dgTruncCellHints, dgCellEllipsis, dgDisplayMemoText]
     ParentFont = False
     Scrollbars = ssAutoVertical
+    ShowHint = True
     TabOrder = 0
     TitleImageList = imglSidebar
     OnTitleClick = gridChainsTitleClick
@@ -64,8 +62,8 @@ object fmMain: TfmMain
     TabOrder = 1
     object gridTasks: TDBGrid
       Left = 2
-      Height = 590
-      Top = 262
+      Height = 588
+      Top = 264
       Width = 926
       Align = alClient
       AutoFillColumns = True
@@ -87,66 +85,77 @@ object fmMain: TfmMain
             'PROGRAM'
             'BUILTIN'
           )
+          SizePriority = 0
           Title.ImageIndex = 1
           Title.Caption = 'Kind'
-          Width = 151
+          Width = 100
           FieldName = 'kind'
         end      
         item
           ButtonStyle = cbsEllipsis
           MinSize = 8
           MaxSize = 83
+          SizePriority = 2
           Title.Caption = 'Command'
-          Width = 151
+          Width = 255
           FieldName = 'command'
         end      
         item
           MinSize = 8
           MaxSize = 167
+          SizePriority = 0
+          Title.Alignment = taCenter
           Title.Caption = 'Ignore Error'
-          Width = 151
+          Width = 100
           FieldName = 'ignore_error'
         end      
         item
           MinSize = 8
           MaxSize = 167
+          SizePriority = 0
+          Title.Alignment = taCenter
           Title.Caption = 'Autonomous'
-          Width = 151
+          Width = 100
           FieldName = 'autonomous'
         end      
         item
           MinSize = 8
           MaxSize = 167
+          SizePriority = 0
+          Title.Alignment = taCenter
           Title.Caption = 'Run As'
-          Width = 151
+          Width = 100
           FieldName = 'run_as'
         end      
         item
           MinSize = 8
           MaxSize = 167
           Title.Caption = 'Connection String'
-          Width = 152
+          Width = 255
           FieldName = 'connect_string'
         end>
       DataSource = dmPgEngine.dsTasks
       DefaultRowHeight = 26
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderHotTracking, dgHeaderPushedLook, dgDisplayMemoText]
+      Flat = True
+      Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderHotTracking, dgHeaderPushedLook, dgCellHints, dgTruncCellHints, dgCellEllipsis, dgDisplayMemoText]
       ParentFont = False
       Scrollbars = ssAutoVertical
+      ShowHint = True
       TabOrder = 0
       OnDrawColumnCell = gridTasksDrawColumnCell
       OnEditButtonClick = gridTasksEditButtonClick
     end
     object gbChain: TGroupBox
       Left = 7
-      Height = 238
+      Height = 240
       Top = 7
       Width = 916
       Align = alTop
       BorderSpacing.Around = 5
       Caption = ' Chain Properties '
-      ClientHeight = 213
+      ClientHeight = 215
       ClientWidth = 912
+      Constraints.MinHeight = 240
       ParentFont = False
       TabOrder = 1
       object lblChainID: TDBText
@@ -254,9 +263,9 @@ object fmMain: TfmMain
         ParentFont = False
       end
       object btnApply: TButton
-        Left = 200
+        Left = 224
         Height = 32
-        Top = 173
+        Top = 168
         Width = 94
         Caption = 'Apply'
         OnClick = btnApplyClick
@@ -266,7 +275,7 @@ object fmMain: TfmMain
       object btnCancel: TButton
         Left = 73
         Height = 32
-        Top = 173
+        Top = 168
         Width = 94
         Caption = 'Cancel'
         OnClick = btnCancelClick
@@ -288,7 +297,7 @@ object fmMain: TfmMain
       Cursor = crVSplit
       Left = 2
       Height = 12
-      Top = 250
+      Top = 252
       Width = 926
       Align = alTop
       ResizeAnchor = akTop

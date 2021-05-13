@@ -40,7 +40,7 @@ type
     splitDetails: TSplitter;
     procedure btnApplyClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
-    procedure ConnectClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure gridChainsTitleClick(Column: TColumn);
     procedure gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -63,7 +63,7 @@ uses uDataModule, SQLDB;
 
 { TfmMain }
 
-procedure TfmMain.ConnectClick(Sender: TObject);
+procedure TfmMain.FormShow(Sender: TObject);
 begin
   dmPgEngine.Connect;
 end;
