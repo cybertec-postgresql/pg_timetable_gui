@@ -20,6 +20,7 @@ type
     transChains: TSQLTransaction;
     procedure PQConnLog(Sender: TSQLConnection; EventType: TDBEventType;
       const Msg: String);
+    procedure qryChainsAfterDelete(DataSet: TDataSet);
     procedure qryChainsAfterInsert(DataSet: TDataSet);
     procedure qryChainsAfterPost(DataSet: TDataSet);
     procedure qryChainschain_nameGetText(Sender: TField; var aText: string;
@@ -46,6 +47,11 @@ procedure TdmPgEngine.PQConnLog(Sender: TSQLConnection;
 begin
   uMain.fmMain.mmLog.Lines.Append(Msg);
   uMain.fmMain.mmLog.Lines.Append('----------------------------------------------------');
+end;
+
+procedure TdmPgEngine.qryChainsAfterDelete(DataSet: TDataSet);
+begin
+  (DataSet as TSQLQuery).ApplyUpdates;
 end;
 
 procedure TdmPgEngine.qryChainsAfterInsert(DataSet: TDataSet);

@@ -64,7 +64,7 @@ object fmMain: TfmMain
     object gridTasks: TDBGrid
       Left = 2
       Height = 273
-      Top = 208
+      Top = 202
       Width = 740
       Align = alClient
       AlternateColor = 16577773
@@ -287,10 +287,10 @@ object fmMain: TfmMain
       Cursor = crVSplit
       Left = 2
       Height = 6
-      Top = 202
+      Top = 475
       Width = 740
-      Align = alTop
-      ResizeAnchor = akTop
+      Align = alBottom
+      ResizeAnchor = akBottom
     end
     object mmLog: TMemo
       Left = 2

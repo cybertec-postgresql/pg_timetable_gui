@@ -78,6 +78,7 @@ object dmPgEngine: TdmPgEngine
         DataType = ftMemo
         Precision = -1
       end>
+    AfterDelete = qryChainsAfterDelete
     AfterInsert = qryChainsAfterInsert
     AfterPost = qryChainsAfterPost
     Database = PQConn
@@ -130,6 +131,10 @@ object dmPgEngine: TdmPgEngine
       #9'"client_name"=:"client_name"'
       'WHERE'
       #9'"chain_id"= :"OLD_chain_id"'
+    )
+    DeleteSQL.Strings = (
+      'DELETE FROM timetable.chain'
+      'WHERE chain_id = :"old_chain_id"'
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
