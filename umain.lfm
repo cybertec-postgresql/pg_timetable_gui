@@ -1,21 +1,20 @@
 object fmMain: TfmMain
   Left = 352
-  Height = 879
+  Height = 703
   Top = 137
-  Width = 1260
+  Width = 1008
   Caption = 'pg_timetable IDE'
-  ClientHeight = 854
-  ClientWidth = 1260
-  DesignTimePPI = 120
+  ClientHeight = 683
+  ClientWidth = 1008
   Menu = menuMain
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   LCLVersion = '2.0.12.0'
   object gridChains: TDBGrid
     Left = 0
-    Height = 854
+    Height = 683
     Top = 0
-    Width = 320
+    Width = 256
     Align = alLeft
     AlternateColor = 16577773
     AutoFillColumns = True
@@ -23,24 +22,25 @@ object fmMain: TfmMain
     Color = clWindow
     Columns = <    
       item
-        MinSize = 8
-        MaxSize = 21
+        MinSize = 6
+        MaxSize = 17
         Title.Caption = 'Chain Name'
-        Width = 204
+        Width = 163
         FieldName = 'chain_name'
       end    
       item
         Alignment = taCenter
         ButtonStyle = cbsCheckboxColumn
-        MinSize = 200
+        MinSize = 160
+        MaxSize = 160
         SizePriority = 0
         Title.Alignment = taCenter
         Title.Caption = 'Enabled'
-        Width = 100
+        Width = 80
         FieldName = 'live'
       end>
     DataSource = dmPgEngine.dsChains
-    DefaultRowHeight = 26
+    DefaultRowHeight = 24
     Flat = True
     Options = [dgEditing, dgTitles, dgIndicator, dgColumnMove, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderHotTracking, dgHeaderPushedLook, dgCellHints, dgTruncCellHints, dgCellEllipsis, dgDisplayMemoText]
     ParentFont = False
@@ -51,37 +51,37 @@ object fmMain: TfmMain
     OnTitleClick = gridChainsTitleClick
   end
   object pnlDetails: TPanel
-    Left = 330
-    Height = 854
+    Left = 264
+    Height = 683
     Top = 0
-    Width = 930
+    Width = 744
     Align = alClient
     BevelWidth = 2
-    ClientHeight = 854
-    ClientWidth = 930
+    ClientHeight = 683
+    ClientWidth = 744
     ParentFont = False
     TabOrder = 1
     object gridTasks: TDBGrid
       Left = 2
-      Height = 588
-      Top = 264
-      Width = 926
+      Height = 273
+      Top = 208
+      Width = 740
       Align = alClient
       AlternateColor = 16577773
       AutoFillColumns = True
       Color = clWindow
       Columns = <      
         item
-          MinSize = 8
-          MaxSize = 167
+          MinSize = 6
+          MaxSize = 134
           Title.Caption = 'task_id'
           Visible = False
           FieldName = 'task_id'
         end      
         item
           ButtonStyle = cbsPickList
-          MinSize = 8
-          MaxSize = 167
+          MinSize = 6
+          MaxSize = 134
           PickList.Strings = (
             'SQL'
             'PROGRAM'
@@ -90,54 +90,54 @@ object fmMain: TfmMain
           SizePriority = 0
           Title.ImageIndex = 1
           Title.Caption = 'Kind'
-          Width = 100
+          Width = 80
           FieldName = 'kind'
         end      
         item
           ButtonStyle = cbsEllipsis
-          MinSize = 8
-          MaxSize = 83
+          MinSize = 6
+          MaxSize = 66
           SizePriority = 2
           Title.Caption = 'Command'
-          Width = 255
+          Width = 203
           FieldName = 'command'
         end      
         item
-          MinSize = 8
-          MaxSize = 167
+          MinSize = 6
+          MaxSize = 134
           SizePriority = 0
           Title.Alignment = taCenter
           Title.Caption = 'Ignore Error'
-          Width = 100
+          Width = 80
           FieldName = 'ignore_error'
         end      
         item
-          MinSize = 8
-          MaxSize = 167
+          MinSize = 6
+          MaxSize = 134
           SizePriority = 0
           Title.Alignment = taCenter
           Title.Caption = 'Autonomous'
-          Width = 100
+          Width = 80
           FieldName = 'autonomous'
         end      
         item
-          MinSize = 8
-          MaxSize = 167
+          MinSize = 6
+          MaxSize = 134
           SizePriority = 0
           Title.Alignment = taCenter
           Title.Caption = 'Run As'
-          Width = 100
+          Width = 80
           FieldName = 'run_as'
         end      
         item
-          MinSize = 8
-          MaxSize = 167
+          MinSize = 6
+          MaxSize = 134
           Title.Caption = 'Connection String'
-          Width = 255
+          Width = 204
           FieldName = 'connect_string'
         end>
       DataSource = dmPgEngine.dsTasks
-      DefaultRowHeight = 26
+      DefaultRowHeight = 24
       Flat = True
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderHotTracking, dgHeaderPushedLook, dgCellHints, dgTruncCellHints, dgCellEllipsis, dgDisplayMemoText]
       ParentFont = False
@@ -148,33 +148,33 @@ object fmMain: TfmMain
       OnEditButtonClick = gridTasksEditButtonClick
     end
     object gbChain: TGroupBox
-      Left = 7
-      Height = 240
-      Top = 7
-      Width = 916
+      Left = 6
+      Height = 192
+      Top = 6
+      Width = 732
       Align = alTop
-      BorderSpacing.Around = 5
+      BorderSpacing.Around = 4
       Caption = ' Chain Properties '
-      ClientHeight = 215
-      ClientWidth = 912
-      Constraints.MinHeight = 240
+      ClientHeight = 172
+      ClientWidth = 728
+      Constraints.MinHeight = 192
       ParentFont = False
       TabOrder = 1
       object lblChainID: TDBText
-        Left = 413
-        Height = 20
-        Top = 7
-        Width = 69
+        Left = 330
+        Height = 15
+        Top = 6
+        Width = 55
         DataField = 'chain_id'
         DataSource = dmPgEngine.dsChains
         ParentColor = False
         ParentFont = False
       end
       object chkExclusive: TDBCheckBox
-        Left = 8
-        Height = 29
-        Top = 127
-        Width = 112
+        Left = 6
+        Height = 23
+        Top = 102
+        Width = 90
         Caption = '&Exclusive'
         DataField = 'exclusive_execution'
         DataSource = dmPgEngine.dsChains
@@ -185,10 +185,10 @@ object fmMain: TfmMain
         ValueUnchecked = 'False'
       end
       object chkSelfDestruct: TDBCheckBox
-        Left = 153
-        Height = 29
-        Top = 127
-        Width = 112
+        Left = 122
+        Height = 23
+        Top = 102
+        Width = 90
         Caption = 'Self &Destruct'
         DataField = 'self_destruct'
         DataSource = dmPgEngine.dsChains
@@ -199,10 +199,10 @@ object fmMain: TfmMain
         ValueUnchecked = 'False'
       end
       object edSchedule: TDBEdit
-        Left = 113
-        Height = 28
-        Top = 47
-        Width = 253
+        Left = 90
+        Height = 23
+        Top = 38
+        Width = 202
         DataField = 'run_at'
         DataSource = dmPgEngine.dsChains
         CharCase = ecNormal
@@ -211,10 +211,10 @@ object fmMain: TfmMain
         TabOrder = 1
       end
       object edClientName: TDBEdit
-        Left = 113
-        Height = 28
-        Top = 87
-        Width = 252
+        Left = 90
+        Height = 23
+        Top = 70
+        Width = 202
         DataField = 'client_name'
         DataSource = dmPgEngine.dsChains
         CharCase = ecNormal
@@ -223,30 +223,30 @@ object fmMain: TfmMain
         TabOrder = 2
       end
       object lblSchedule: TLabel
-        Left = 8
-        Height = 20
-        Top = 53
-        Width = 60
+        Left = 6
+        Height = 15
+        Top = 42
+        Width = 48
         Caption = '&Schedule'
         FocusControl = edSchedule
         ParentColor = False
         ParentFont = False
       end
       object lblRunAt1: TLabel
-        Left = 8
-        Height = 20
-        Top = 93
-        Width = 82
+        Left = 6
+        Height = 15
+        Top = 74
+        Width = 66
         Caption = '&Client Name'
         FocusControl = edSchedule
         ParentColor = False
         ParentFont = False
       end
       object edChainName: TDBEdit
-        Left = 113
-        Height = 28
-        Top = 7
-        Width = 253
+        Left = 90
+        Height = 23
+        Top = 6
+        Width = 202
         DataField = 'chain_name'
         DataSource = dmPgEngine.dsChains
         CharCase = ecNormal
@@ -255,67 +255,65 @@ object fmMain: TfmMain
         TabOrder = 0
       end
       object lblChainName: TLabel
-        Left = 8
-        Height = 20
-        Top = 13
-        Width = 81
+        Left = 6
+        Height = 15
+        Top = 10
+        Width = 66
         Caption = 'Chain &Name'
         FocusControl = edChainName
         ParentColor = False
         ParentFont = False
       end
-      object btnApply: TButton
-        Left = 224
-        Height = 32
-        Top = 168
-        Width = 94
-        Caption = 'Apply'
-        OnClick = btnApplyClick
-        ParentFont = False
-        TabOrder = 6
-      end
-      object btnCancel: TButton
-        Left = 73
-        Height = 32
-        Top = 168
-        Width = 94
-        Caption = 'Cancel'
-        OnClick = btnCancelClick
-        ParentFont = False
+      object dsnavChains: TDBNavigator
+        Left = 8
+        Height = 25
+        Top = 136
+        Width = 285
+        BevelOuter = bvNone
+        ChildSizing.EnlargeHorizontal = crsScaleChilds
+        ChildSizing.EnlargeVertical = crsScaleChilds
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 100
+        ClientHeight = 25
+        ClientWidth = 285
+        DataSource = dmPgEngine.dsChains
+        Options = []
         TabOrder = 5
-      end
-      object mmLog: TMemo
-        Left = 384
-        Height = 200
-        Top = 4
-        Width = 518
-        Align = alCustom
-        ParentFont = False
-        ScrollBars = ssAutoVertical
-        TabOrder = 7
       end
     end
     object splitDetails: TSplitter
       Cursor = crVSplit
       Left = 2
-      Height = 12
-      Top = 252
-      Width = 926
+      Height = 6
+      Top = 202
+      Width = 740
       Align = alTop
       ResizeAnchor = akTop
     end
+    object mmLog: TMemo
+      Left = 2
+      Height = 200
+      Top = 481
+      Width = 740
+      Align = alBottom
+      ParentFont = False
+      ScrollBars = ssAutoVertical
+      TabOrder = 3
+    end
   end
   object splitSidebar: TSplitter
-    Left = 320
-    Height = 854
+    Left = 256
+    Height = 683
     Top = 0
-    Width = 10
+    Width = 8
   end
   object imglSidebar: TImageList
     Height = 24
     Width = 24
-    Left = 100
-    Top = 780
+    Left = 80
+    Top = 624
     Bitmap = {
       4C69050000001800000018000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -681,8 +679,8 @@ object fmMain: TfmMain
     }
   end
   object menuMain: TMainMenu
-    Left = 13
-    Top = 780
+    Left = 10
+    Top = 624
     object miFile: TMenuItem
       Caption = 'File'
       object miClose: TMenuItem
@@ -695,5 +693,9 @@ object fmMain: TfmMain
         Caption = 'About...'
       end
     end
+  end
+  object alChains: TActionList
+    Left = 144
+    Top = 627
   end
 end

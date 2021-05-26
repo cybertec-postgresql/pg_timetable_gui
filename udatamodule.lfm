@@ -1,18 +1,18 @@
 object dmPgEngine: TdmPgEngine
   OldCreateOrder = False
-  Height = 436
-  HorizontalOffset = 489
-  VerticalOffset = 392
-  Width = 556
-  PPI = 120
+  Height = 349
+  HorizontalOffset = 391
+  VerticalOffset = 314
+  Width = 445
   object dsChains: TDataSource
+    AutoEdit = False
     DataSet = qryChains
-    Left = 90
-    Top = 40
+    Left = 72
+    Top = 32
   end
   object PQConn: TPQConnection
-    Connected = False
-    LoginPrompt = False
+    Connected = True
+    LoginPrompt = True
     DatabaseName = 'timetable'
     KeepConnection = False
     Password = 'farata'
@@ -20,8 +20,8 @@ object dmPgEngine: TdmPgEngine
     UserName = 'pasha'
     OnLog = PQConnLog
     LogEvents = [detParamValue, detActualSQL]
-    Left = 87
-    Top = 260
+    Left = 70
+    Top = 208
   end
   object qryChains: TSQLQuery
     PacketRecords = -1
@@ -30,6 +30,7 @@ object dmPgEngine: TdmPgEngine
     FieldDefs = <    
       item
         Name = 'chain_id'
+        Attributes = [faRequired]
         DataType = ftLargeint
         Precision = -1
       end    
@@ -56,16 +57,19 @@ object dmPgEngine: TdmPgEngine
       end    
       item
         Name = 'live'
+        Attributes = [faRequired]
         DataType = ftBoolean
         Precision = -1
       end    
       item
         Name = 'self_destruct'
+        Attributes = [faRequired]
         DataType = ftBoolean
         Precision = -1
       end    
       item
         Name = 'exclusive_execution'
+        Attributes = [faRequired]
         DataType = ftBoolean
         Precision = -1
       end    
@@ -74,6 +78,8 @@ object dmPgEngine: TdmPgEngine
         DataType = ftMemo
         Precision = -1
       end>
+    AfterInsert = qryChainsAfterInsert
+    AfterPost = qryChainsAfterPost
     Database = PQConn
     Transaction = transChains
     SQL.Strings = (
@@ -90,6 +96,27 @@ object dmPgEngine: TdmPgEngine
       'FROM timetable.chain'
       'ORDER BY chain_id'
     )
+    InsertSQL.Strings = (
+      'INSERT INTO timetable.chain ('
+      #9'"task_id",'
+      #9'"chain_name",'
+      #9'"run_at",'
+      #9'"max_instances",'
+      #9'"live",'
+      #9'"self_destruct",'
+      #9'"exclusive_execution",'
+      #9'"client_name"'
+      ') VALUES ('
+      #9'timetable.add_task(''SQL'', ''SELECT 1'', NULL),'
+      #9':"chain_name",'
+      #9':"run_at",'
+      #9':"max_instances",'
+      #9':"live",'
+      #9':"self_destruct",'
+      #9':"exclusive_execution",'
+      #9':"client_name"'
+      ')'
+    )
     UpdateSQL.Strings = (
       'UPDATE timetable.chain'
       'SET'
@@ -104,20 +131,20 @@ object dmPgEngine: TdmPgEngine
       'WHERE'
       #9'"chain_id"= :"OLD_chain_id"'
     )
-    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit, sqoRefreshUsingSelect]
+    Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
     ParamCheck = False
     ParseSQL = False
     UsePrimaryKeyAsKey = False
-    Left = 87
-    Top = 147
+    Left = 70
+    Top = 118
   end
   object transChains: TSQLTransaction
-    Active = False
+    Active = True
     Database = PQConn
     Options = [stoUseImplicit]
-    Left = 160
-    Top = 260
+    Left = 128
+    Top = 208
   end
   object qryTasks: TSQLQuery
     PacketRecords = -1
@@ -185,12 +212,12 @@ object dmPgEngine: TdmPgEngine
       end>
     UpdateMode = upWhereAll
     DataSource = dsChains
-    Left = 160
-    Top = 147
+    Left = 128
+    Top = 118
   end
   object dsTasks: TDataSource
     DataSet = qryTasks
-    Left = 160
-    Top = 40
+    Left = 128
+    Top = 32
   end
 end

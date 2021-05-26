@@ -20,6 +20,8 @@ type
     transChains: TSQLTransaction;
     procedure PQConnLog(Sender: TSQLConnection; EventType: TDBEventType;
       const Msg: String);
+    procedure qryChainsAfterInsert(DataSet: TDataSet);
+    procedure qryChainsAfterPost(DataSet: TDataSet);
     procedure qryChainschain_nameGetText(Sender: TField; var aText: string;
       DisplayText: Boolean);
   private
@@ -44,6 +46,27 @@ procedure TdmPgEngine.PQConnLog(Sender: TSQLConnection;
 begin
   uMain.fmMain.mmLog.Lines.Append(Msg);
   uMain.fmMain.mmLog.Lines.Append('----------------------------------------------------');
+end;
+
+procedure TdmPgEngine.qryChainsAfterInsert(DataSet: TDataSet);
+begin
+  with DataSet do
+  begin
+    FieldByName('live').AsBoolean := True;
+    FieldByName('self_destruct').AsBoolean := False;
+    FieldByName('exclusive_execution').AsBoolean := False;
+    FieldByName('run_at').AsString := '* * * * *';
+  end;
+end;
+
+procedure TdmPgEngine.qryChainsAfterPost(DataSet: TDataSet);
+var
+  c: variant;
+begin
+  c := DataSet.FieldValues['chain_name'];
+  (DataSet as TSQLQuery).ApplyUpdates;
+  DataSet.Refresh;
+  DataSet.Locate('chain_name', c, []);
 end;
 
 procedure TdmPgEngine.qryChainschain_nameGetText(Sender: TField;

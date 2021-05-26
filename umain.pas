@@ -7,17 +7,17 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
   StdCtrls, DBGrids, DBCtrls, ExtCtrls, RTTIGrids, RTTICtrls, uObjects,
-  PropEdits, ObjectInspector, VirtualTrees, DB, Grids;
+  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList;
 
 type
 
   { TfmMain }
 
   TfmMain = class(TForm)
-    btnApply: TButton;
-    btnCancel: TButton;
+    alChains: TActionList;
     chkExclusive: TDBCheckBox;
     chkSelfDestruct: TDBCheckBox;
+    dsnavChains: TDBNavigator;
     gridTasks: TDBGrid;
     edClientName: TDBEdit;
     edSchedule: TDBEdit;
@@ -38,7 +38,6 @@ type
     pnlDetails: TPanel;
     splitSidebar: TSplitter;
     splitDetails: TSplitter;
-    procedure btnApplyClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -149,11 +148,6 @@ end;
 procedure TfmMain.gridTasksEditButtonClick(Sender: TObject);
 begin
   ShowMessage(gridTasks.SelectedField.AsString);
-end;
-
-procedure TfmMain.btnApplyClick(Sender: TObject);
-begin
-  dmPgEngine.qryChains.Post;
 end;
 
 procedure TfmMain.btnCancelClick(Sender: TObject);
