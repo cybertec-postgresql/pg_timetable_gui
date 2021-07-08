@@ -19,7 +19,7 @@ jobs:
       uses: gcarreno/setup-lazarus@v3.0.2
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
-        include-packages: "Synapse 40.1"
+        # include-packages: "Synapse 40.1"
 
     - name: Build the Main Application
       if: ${{ matrix.operating-system != 'macos-latest' }}
@@ -31,7 +31,7 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: pg_timetable_gui_binary
+        name: pg_timetable_gui for ${{ matrix.operating-system }}
         path: |
           pg_timetable_gui.exe 
           pg_timetable_gui
