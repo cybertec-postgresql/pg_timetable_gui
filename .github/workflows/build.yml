@@ -32,6 +32,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: pg_timetable_gui for ${{ matrix.operating-system }}
+        retention-days: 3
         path: |
           pg_timetable_gui.exe 
           pg_timetable_gui
