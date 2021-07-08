@@ -2,10 +2,6 @@ name: build-test
 
 on:
   push:
-    paths-ignore:
-      - "README.md"
-    branches:
-      - *
   pull_request:
   workflow_dispatch:
 
