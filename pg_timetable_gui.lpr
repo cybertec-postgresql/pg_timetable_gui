@@ -7,9 +7,9 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads} cthreads, {$ENDIF} {$ENDIF}
   Forms,
   lazcontrols,
   runtimetypeinfocontrols,
-  uMain,
+  fmMain, fmConnect,
   uDataModule,
-  uObjects { you can add units after this };
+  uObjects;
 
 {$R *.res}
 
@@ -17,7 +17,7 @@ begin
   RequireDerivedFormResource := True;
   Application.Scaled := True;
   Application.Initialize;
-  Application.CreateForm(TfmMain, fmMain);
+  Application.CreateForm(TfmMain, MainForm);
   Application.CreateForm(TdmPgEngine, dmPgEngine);
   Application.Run;
 end.
