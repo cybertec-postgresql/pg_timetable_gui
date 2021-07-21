@@ -172,9 +172,10 @@ object fmMain: TfmMain
       end
       object chkExclusive: TDBCheckBox
         Left = 9
-        Height = 34
+        Height = 29
         Top = 153
-        Width = 135
+        Width = 99
+        AutoSize = True
         Caption = '&Exclusive'
         DataField = 'exclusive_execution'
         DataSource = dmPgEngine.dsChains
@@ -186,9 +187,10 @@ object fmMain: TfmMain
       end
       object chkSelfDestruct: TDBCheckBox
         Left = 183
-        Height = 34
+        Height = 29
         Top = 153
-        Width = 135
+        Width = 130
+        AutoSize = True
         Caption = 'Self &Destruct'
         DataField = 'self_destruct'
         DataSource = dmPgEngine.dsChains
