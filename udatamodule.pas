@@ -20,6 +20,7 @@ type
     transChains: TSQLTransaction;
     procedure PQConnLog(Sender: TSQLConnection; EventType: TDBEventType;
       const Msg: String);
+    procedure PQConnLogin(Sender: TObject; Username, Password: string);
     procedure qryChainsAfterDelete(DataSet: TDataSet);
     procedure qryChainsAfterInsert(DataSet: TDataSet);
     procedure qryChainsAfterPost(DataSet: TDataSet);
@@ -36,7 +37,7 @@ var
 
 implementation
 
-uses uObjects, uMain;
+uses uObjects, fmMain, fmConnect;
 
 {$R *.lfm}
 
@@ -45,8 +46,13 @@ uses uObjects, uMain;
 procedure TdmPgEngine.PQConnLog(Sender: TSQLConnection;
   EventType: TDBEventType; const Msg: String);
 begin
-  uMain.fmMain.mmLog.Lines.Append(Msg);
-  uMain.fmMain.mmLog.Lines.Append('----------------------------------------------------');
+  fmMain.MainForm.mmLog.Lines.Append(Msg);
+  fmMain.MainForm.mmLog.Lines.Append('----------------------------------------------------');
+end;
+
+procedure TdmPgEngine.PQConnLogin(Sender: TObject; Username, Password: string);
+begin
+  if not fmconnect.EditDatabase(Sender as TPQConnection) then Abort();
 end;
 
 procedure TdmPgEngine.qryChainsAfterDelete(DataSet: TDataSet);

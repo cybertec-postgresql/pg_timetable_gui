@@ -1,4 +1,4 @@
-unit uMain;
+unit fmMain;
 
 {$mode objfpc}{$H+}
 
@@ -15,6 +15,7 @@ type
 
   TfmMain = class(TForm)
     alChains: TActionList;
+    btnConnect: TButton;
     chkExclusive: TDBCheckBox;
     chkSelfDestruct: TDBCheckBox;
     dsnavChains: TDBNavigator;
@@ -39,7 +40,7 @@ type
     splitSidebar: TSplitter;
     splitDetails: TSplitter;
     procedure btnCancelClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
+    procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure gridChainsTitleClick(Column: TColumn);
     procedure gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -52,7 +53,7 @@ type
   end;
 
 var
-  fmMain: TfmMain;
+  MainForm: TfmMain;
 
 implementation
 
@@ -61,11 +62,6 @@ uses uDataModule, SQLDB;
 {$R *.lfm}
 
 { TfmMain }
-
-procedure TfmMain.FormShow(Sender: TObject);
-begin
-  dmPgEngine.Connect;
-end;
 
 procedure TfmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
@@ -153,6 +149,18 @@ end;
 procedure TfmMain.btnCancelClick(Sender: TObject);
 begin
   dmPgEngine.qryChains.Cancel;
+end;
+
+procedure TfmMain.btnConnectClick(Sender: TObject);
+begin
+  try
+    dmPgEngine.Connect;
+  except
+    on EAbort do
+      mmLog.Lines.Append('Connection cancelled by the user');
+    on E: Exception do
+      MessageDlg('PostgreSQL Error', E.Message, mtError, [mbOK], 0);
+  end;
 end;
 
 end.
