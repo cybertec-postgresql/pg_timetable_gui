@@ -14,8 +14,9 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
+    acConnect: TAction;
+    acDisconnect: TAction;
     alChains: TActionList;
-    btnConnect: TButton;
     chkExclusive: TDBCheckBox;
     chkSelfDestruct: TDBCheckBox;
     dsnavChains: TDBNavigator;
@@ -28,8 +29,10 @@ type
     imglSidebar: TImageList;
     lblSchedule: TLabel;
     lblChainID: TDBText;
-    lblRunAt1: TLabel;
+    lblRunAt: TLabel;
     lblChainName: TLabel;
+    miConnect: TMenuItem;
+    miDisconnect: TMenuItem;
     mmLog: TMemo;
     menuMain: TMainMenu;
     miFile: TMenuItem;
@@ -39,8 +42,13 @@ type
     pnlDetails: TPanel;
     splitSidebar: TSplitter;
     splitDetails: TSplitter;
+    toolbarMain: TToolBar;
+    btnConnect: TToolButton;
+    procedure acConnectUpdate(Sender: TObject);
+    procedure acDisconnectExecute(Sender: TObject);
+    procedure acDisconnectUpdate(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
-    procedure btnConnectClick(Sender: TObject);
+    procedure acConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure gridChainsTitleClick(Column: TColumn);
     procedure gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -151,7 +159,22 @@ begin
   dmPgEngine.qryChains.Cancel;
 end;
 
-procedure TfmMain.btnConnectClick(Sender: TObject);
+procedure TfmMain.acConnectUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not dmPgEngine.PQConn.Connected;
+end;
+
+procedure TfmMain.acDisconnectExecute(Sender: TObject);
+begin
+  dmPgEngine.Disconnect;
+end;
+
+procedure TfmMain.acDisconnectUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := dmPgEngine.PQConn.Connected;
+end;
+
+procedure TfmMain.acConnectClick(Sender: TObject);
 begin
   try
     dmPgEngine.Connect;

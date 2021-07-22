@@ -6,7 +6,7 @@ interface
 
 uses
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, DB, PQConnection, SQLDB;
+  StdCtrls, ExtCtrls, EditBtn, DB, PQConnection, SQLDB;
 
 type
 
@@ -15,28 +15,29 @@ type
   TfmConnect = class(TForm)
     Bevel1: TBevel;
     btnTest: TButton;
+    edPasswd: TEditButton;
     laUser: TLabel;
     laPass: TLabel;
-    DBUserID: TEdit;
-    DBPasswd: TEdit;
+    edUserID: TEdit;
     laDbName: TLabel;
-    DBName: TEdit;
+    edDatabase: TEdit;
     laHost: TLabel;
-    DBHost: TEdit;
+    edHost: TEdit;
     laPort: TLabel;
-    DBPort: TEdit;
-    OkBtn: TButton;
-    CancelBtn: TButton;
-    Panel1: TPanel;
+    edPort: TEdit;
+    btnOk: TButton;
+    btnCancel: TButton;
+    pnlHeader: TPanel;
+    procedure edPasswdButtonClick(Sender: TObject);
   private
     Database: TPQConnection;
-    function Edit: Boolean;
+    function Edit: boolean;
   public
     procedure GetDatabaseProperty(Db: TPQConnection);
     procedure SetDatabaseProperty(Db: TPQConnection);
   end;
 
-function EditDatabase(ADatabase: TPQConnection): Boolean;
+function EditDatabase(ADatabase: TPQConnection): boolean;
 
 var
   fmConnect: TfmConnect;
@@ -45,18 +46,27 @@ implementation
 
 {$R *.lfm}
 
-function EditDatabase(ADatabase: TPQConnection): Boolean;
+function EditDatabase(ADatabase: TPQConnection): boolean;
 begin
   with TfmConnect.Create(Application) do
-  try
-    Database := ADatabase;
-    Result := Edit;
-  finally
-    Free;
-  end;
+    try
+      Database := ADatabase;
+      Result := Edit;
+    finally
+      Free;
+    end;
 end;
 
-function TfmConnect.Edit: Boolean;
+procedure TfmConnect.edPasswdButtonClick(Sender: TObject);
+begin
+  with (Sender as TEditButton) do
+    if EchoMode = emNormal then
+      EchoMode := emPassword
+    else
+      EchoMode := emNormal;
+end;
+
+function TfmConnect.Edit: boolean;
 begin
   GetDatabaseProperty(Database);
   Result := False;
@@ -69,23 +79,23 @@ end;
 
 procedure TfmConnect.GetDatabaseProperty(Db: TPQConnection);
 begin
-  DBName.Text := DB.DatabaseName;
-  DBUserId.Text := db.UserName;
-  DBPasswd.Text := db.Password;
-  DBHost.Text := Db.HostName;
-  DBPort.Text := Db.Params.Values['port'];
-  if DBPort.Text = '' then DBPort.Text := '5432';
+  edDatabase.Text := DB.DatabaseName;
+  edUserID.Text := DB.UserName;
+  edPasswd.Text := DB.Password;
+  edHost.Text := DB.HostName;
+  edPort.Text := DB.Params.Values['port'];
+  if edPort.Text = '' then
+    edPort.Text := '5432';
 end;
 
 procedure TfmConnect.SetDatabaseProperty(Db: TPQConnection);
 begin
-  DB.DatabaseName := DBName.Text;
-  db.UserName := DBUserId.Text;
-  db.Password := DBPasswd.Text;
-  Db.HostName := DBHost.Text;
-  Db.Params.Add(Format('port=%d', [StrToIntDef(DBPort.Text, 5432)]));
+  DB.DatabaseName := edDatabase.Text;
+  DB.UserName := edUserID.Text;
+  DB.Password := edPasswd.Text;
+  DB.HostName := edHost.Text;
+  DB.Params.Add(Format('port=%d', [StrToIntDef(edPort.Text, 5432)]));
 end;
 
 end.
-
 
