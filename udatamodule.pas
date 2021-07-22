@@ -24,6 +24,7 @@ type
     procedure qryChainsAfterDelete(DataSet: TDataSet);
     procedure qryChainsAfterInsert(DataSet: TDataSet);
     procedure qryChainsAfterPost(DataSet: TDataSet);
+    procedure qryChainsBeforeDelete(DataSet: TDataSet);
     procedure qryChainschain_nameGetText(Sender: TField; var aText: string;
       DisplayText: Boolean);
   private
@@ -37,7 +38,7 @@ var
 
 implementation
 
-uses uObjects, fmMain, fmConnect;
+uses uObjects, fmMain, fmConnect, Dialogs, UITypes;
 
 {$R *.lfm}
 
@@ -52,7 +53,7 @@ end;
 
 procedure TdmPgEngine.PQConnLogin(Sender: TObject; Username, Password: string);
 begin
-  if not fmconnect.EditDatabase(Sender as TPQConnection) then Abort();
+  if not fmConnect.EditDatabase(Sender as TPQConnection) then Abort();
 end;
 
 procedure TdmPgEngine.qryChainsAfterDelete(DataSet: TDataSet);
@@ -81,6 +82,13 @@ begin
   DataSet.Locate('chain_name', c, []);
 end;
 
+procedure TdmPgEngine.qryChainsBeforeDelete(DataSet: TDataSet);
+begin
+  if MessageDlg('Delete confirmation',
+    'Are you sure you want delete current chain?', mtWarning, [mbOK, mbCancel], 0) = mrCancel then
+  Abort;
+end;
+
 procedure TdmPgEngine.qryChainschain_nameGetText(Sender: TField;
   var aText: string; DisplayText: Boolean);
 begin
@@ -91,6 +99,7 @@ procedure TdmPgEngine.Connect;
 begin
   qryChains.Open;
   qryTasks.Open;
+  qryChains.First;
 end;
 
 procedure TdmPgEngine.Disconnect;

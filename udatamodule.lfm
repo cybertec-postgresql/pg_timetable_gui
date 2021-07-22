@@ -1,8 +1,8 @@
 object dmPgEngine: TdmPgEngine
   OldCreateOrder = False
   Height = 524
-  HorizontalOffset = 587
-  VerticalOffset = 471
+  HorizontalOffset = 1650
+  VerticalOffset = 828
   Width = 668
   PPI = 144
   object dsChains: TDataSource
@@ -17,7 +17,7 @@ object dmPgEngine: TdmPgEngine
     OnLogin = PQConnLogin
     DatabaseName = 'timetable'
     KeepConnection = False
-    Password = 'farata'
+    Password = 'somestrong'
     Transaction = transChains
     UserName = 'scheduler'
     OnLog = PQConnLog
@@ -28,61 +28,12 @@ object dmPgEngine: TdmPgEngine
   object qryChains: TSQLQuery
     PacketRecords = -1
     IndexName = 'DEFAULT_ORDER'
-    MaxIndexesCount = 10
-    FieldDefs = <    
-      item
-        Name = 'chain_id'
-        Attributes = [faRequired]
-        DataType = ftLargeint
-        Precision = -1
-      end    
-      item
-        Name = 'task_id'
-        DataType = ftLargeint
-        Precision = -1
-      end    
-      item
-        Name = 'chain_name'
-        DataType = ftString
-        Precision = -1
-        Size = 255
-      end    
-      item
-        Name = 'run_at'
-        DataType = ftMemo
-        Precision = -1
-      end    
-      item
-        Name = 'max_instances'
-        DataType = ftInteger
-        Precision = -1
-      end    
-      item
-        Name = 'live'
-        Attributes = [faRequired]
-        DataType = ftBoolean
-        Precision = -1
-      end    
-      item
-        Name = 'self_destruct'
-        Attributes = [faRequired]
-        DataType = ftBoolean
-        Precision = -1
-      end    
-      item
-        Name = 'exclusive_execution'
-        Attributes = [faRequired]
-        DataType = ftBoolean
-        Precision = -1
-      end    
-      item
-        Name = 'client_name'
-        DataType = ftMemo
-        Precision = -1
-      end>
+    MaxIndexesCount = 20
+    FieldDefs = <>
     AfterDelete = qryChainsAfterDelete
     AfterInsert = qryChainsAfterInsert
     AfterPost = qryChainsAfterPost
+    BeforeDelete = qryChainsBeforeDelete
     Database = PQConn
     Transaction = transChains
     SQL.Strings = (

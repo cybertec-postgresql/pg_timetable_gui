@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
   StdCtrls, DBGrids, DBCtrls, ExtCtrls, RTTIGrids, RTTICtrls, uObjects,
-  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList;
+  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList, DBActns;
 
 type
 
@@ -19,13 +19,20 @@ type
     alChains: TActionList;
     chkExclusive: TDBCheckBox;
     chkSelfDestruct: TDBCheckBox;
-    dsnavChains: TDBNavigator;
+    acChainInsert: TDataSetInsert;
+    acChainDelete: TDataSetDelete;
+    acChainEdit: TDataSetEdit;
+    acChainRefresh: TDataSetRefresh;
+    acChainPost: TDataSetPost;
+    acChainCancel: TDataSetCancel;
     gridTasks: TDBGrid;
     edClientName: TDBEdit;
     edSchedule: TDBEdit;
     edChainName: TDBEdit;
     gbChain: TGroupBox;
     gridChains: TDBGrid;
+    imglNavigatorDisabled: TImageList;
+    imglNavigator: TImageList;
     imglSidebar: TImageList;
     lblSchedule: TLabel;
     lblChainID: TDBText;
@@ -39,11 +46,19 @@ type
     miClose: TMenuItem;
     miHelp: TMenuItem;
     miAbout: TMenuItem;
+    pnlChains: TPanel;
     pnlDetails: TPanel;
     splitSidebar: TSplitter;
     splitDetails: TSplitter;
     toolbarMain: TToolBar;
     btnConnect: TToolButton;
+    btnChainInsert: TToolButton;
+    btnSeparator: TToolButton;
+    btnChainDelete: TToolButton;
+    btnChainEdit: TToolButton;
+    btnChainRefresh: TToolButton;
+    btnChainPost: TToolButton;
+    btnChainCancel: TToolButton;
     procedure acConnectUpdate(Sender: TObject);
     procedure acDisconnectExecute(Sender: TObject);
     procedure acDisconnectUpdate(Sender: TObject);
@@ -52,7 +67,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure gridChainsTitleClick(Column: TColumn);
     procedure gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
-      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+      DataCol: integer; Column: TColumn; State: TGridDrawState);
     procedure gridTasksEditButtonClick(Sender: TObject);
   private
     FLastColumn: TColumn; //last sorted grid column
@@ -134,15 +149,17 @@ begin
 end;
 
 procedure TfmMain.gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
-  DataCol: Integer; Column: TColumn; State: TGridDrawState);
-var ImgIdx, aLeft, aTop: integer;
+  DataCol: integer; Column: TColumn; State: TGridDrawState);
+var
+  ImgIdx, aLeft, aTop: integer;
 begin
-  if Column.FieldName <> 'kind' then Exit;
+  if Column.FieldName <> 'kind' then
+    Exit;
   case Column.Field.AsString of
     'SQL': ImgIdx := 0;
     'PROGRAM': ImgIdx := 1;
-  else
-    ImgIdx := 2;
+    else
+      ImgIdx := 2;
   end;
   aLeft := Rect.Left + Rect.Width - imglSidebar.Width - 2;
   aTop := Rect.Top + (Rect.Height - imglSidebar.Height) div 2;
@@ -161,7 +178,9 @@ end;
 
 procedure TfmMain.acConnectUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := not dmPgEngine.PQConn.Connected;
+  //(Sender as TAction).Enabled := not dmPgEngine.PQConn.Connected;
+  btnConnect.Down := dmPgEngine.PQConn.Connected;
+  miConnect.Checked := btnConnect.Down;
 end;
 
 procedure TfmMain.acDisconnectExecute(Sender: TObject);
@@ -176,14 +195,17 @@ end;
 
 procedure TfmMain.acConnectClick(Sender: TObject);
 begin
-  try
-    dmPgEngine.Connect;
-  except
-    on EAbort do
-      mmLog.Lines.Append('Connection cancelled by the user');
-    on E: Exception do
-      MessageDlg('PostgreSQL Error', E.Message, mtError, [mbOK], 0);
-  end;
+  if not dmPgEngine.PQConn.Connected then
+    try
+      dmPgEngine.Connect;
+    except
+      on EAbort do
+        mmLog.Lines.Append('Connection cancelled by the user');
+      on E: Exception do
+        MessageDlg('PostgreSQL Error', E.Message, mtError, [mbOK], 0);
+    end
+  else
+    dmPgEngine.Disconnect;
 end;
 
 end.
