@@ -21,6 +21,7 @@ type
     procedure PQConnLog(Sender: TSQLConnection; EventType: TDBEventType;
       const Msg: String);
     procedure PQConnLogin(Sender: TObject; Username, Password: string);
+    procedure qryChainsAfterClose(DataSet: TDataSet);
     procedure qryChainsAfterDelete(DataSet: TDataSet);
     procedure qryChainsAfterInsert(DataSet: TDataSet);
     procedure qryChainsAfterPost(DataSet: TDataSet);
@@ -56,6 +57,12 @@ begin
   if not fmConnect.EditDatabase(Sender as TPQConnection) then Abort();
 end;
 
+procedure TdmPgEngine.qryChainsAfterClose(DataSet: TDataSet);
+begin
+   with DataSet as TSQLQuery do
+     IndexName := '';
+end;
+
 procedure TdmPgEngine.qryChainsAfterDelete(DataSet: TDataSet);
 begin
   (DataSet as TSQLQuery).ApplyUpdates;
@@ -76,10 +83,12 @@ procedure TdmPgEngine.qryChainsAfterPost(DataSet: TDataSet);
 var
   c: variant;
 begin
+  (DataSet as TSQLQuery).IndexName := '';
   c := DataSet.FieldValues['chain_name'];
   (DataSet as TSQLQuery).ApplyUpdates;
   DataSet.Refresh;
   DataSet.Locate('chain_name', c, []);
+  fmMain.MainForm.UpdateSortIndication(nil);
 end;
 
 procedure TdmPgEngine.qryChainsBeforeDelete(DataSet: TDataSet);

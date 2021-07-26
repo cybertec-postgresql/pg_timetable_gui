@@ -11,21 +11,21 @@ object fmMain: TfmMain
   OnCloseQuery = FormCloseQuery
   LCLVersion = '2.0.12.0'
   object pnlDetails: TPanel
-    Left = 454
-    Height = 989
-    Top = 35
-    Width = 1058
+    Left = 0
+    Height = 540
+    Top = 484
+    Width = 1512
     Align = alClient
     BevelWidth = 2
-    ClientHeight = 989
-    ClientWidth = 1058
+    ClientHeight = 540
+    ClientWidth = 1512
     ParentFont = False
     TabOrder = 1
     object gridTasks: TDBGrid
       Left = 2
-      Height = 376
-      Top = 302
-      Width = 1054
+      Height = 227
+      Top = 2
+      Width = 1508
       Align = alClient
       AlternateColor = 16577773
       AutoFillColumns = True
@@ -59,7 +59,7 @@ object fmMain: TfmMain
           MaxSize = 99
           SizePriority = 2
           Title.Caption = 'Command'
-          Width = 277
+          Width = 504
           FieldName = 'command'
         end      
         item
@@ -93,7 +93,7 @@ object fmMain: TfmMain
           MinSize = 9
           MaxSize = 201
           Title.Caption = 'Connection String'
-          Width = 278
+          Width = 505
           FieldName = 'connect_string'
         end>
       DataSource = dmPgEngine.dsTasks
@@ -107,151 +107,34 @@ object fmMain: TfmMain
       OnDrawColumnCell = gridTasksDrawColumnCell
       OnEditButtonClick = gridTasksEditButtonClick
     end
-    object gbChain: TGroupBox
-      Left = 8
-      Height = 288
-      Top = 8
-      Width = 1042
-      Align = alTop
-      BorderSpacing.Around = 6
-      Caption = ' Chain Properties '
-      ClientHeight = 258
-      ClientWidth = 1038
-      Constraints.MinHeight = 288
-      ParentFont = False
-      TabOrder = 1
-      object lblChainID: TDBText
-        Left = 495
-        Height = 25
-        Top = 9
-        Width = 81
-        DataField = 'chain_id'
-        DataSource = dmPgEngine.dsChains
-        ParentColor = False
-        ParentFont = False
-      end
-      object chkExclusive: TDBCheckBox
-        Left = 9
-        Height = 29
-        Top = 153
-        Width = 99
-        AutoSize = True
-        Caption = '&Exclusive'
-        DataField = 'exclusive_execution'
-        DataSource = dmPgEngine.dsChains
-        ParentFont = False
-        TabOrder = 3
-        TabStop = True
-        ValueChecked = 'True'
-        ValueUnchecked = 'False'
-      end
-      object chkSelfDestruct: TDBCheckBox
-        Left = 183
-        Height = 29
-        Top = 153
-        Width = 130
-        AutoSize = True
-        Caption = 'Self &Destruct'
-        DataField = 'self_destruct'
-        DataSource = dmPgEngine.dsChains
-        ParentFont = False
-        TabOrder = 4
-        TabStop = True
-        ValueChecked = 'True'
-        ValueUnchecked = 'False'
-      end
-      object edSchedule: TDBEdit
-        Left = 135
-        Height = 33
-        Top = 57
-        Width = 303
-        DataField = 'run_at'
-        DataSource = dmPgEngine.dsChains
-        CharCase = ecNormal
-        MaxLength = 0
-        ParentFont = False
-        TabOrder = 1
-      end
-      object edClientName: TDBEdit
-        Left = 135
-        Height = 33
-        Top = 105
-        Width = 303
-        DataField = 'client_name'
-        DataSource = dmPgEngine.dsChains
-        CharCase = ecNormal
-        MaxLength = 0
-        ParentFont = False
-        TabOrder = 2
-      end
-      object lblSchedule: TLabel
-        Left = 9
-        Height = 25
-        Top = 63
-        Width = 71
-        Caption = '&Schedule'
-        FocusControl = edSchedule
-        ParentColor = False
-        ParentFont = False
-      end
-      object lblRunAt: TLabel
-        Left = 9
-        Height = 25
-        Top = 111
-        Width = 96
-        Caption = '&Client Name'
-        FocusControl = edSchedule
-        ParentColor = False
-        ParentFont = False
-      end
-      object edChainName: TDBEdit
-        Left = 135
-        Height = 33
-        Top = 9
-        Width = 303
-        DataField = 'chain_name'
-        DataSource = dmPgEngine.dsChains
-        CharCase = ecNormal
-        MaxLength = 0
-        ParentFont = False
-        TabOrder = 0
-      end
-      object lblChainName: TLabel
-        Left = 9
-        Height = 25
-        Top = 15
-        Width = 96
-        Caption = 'Chain &Name'
-        FocusControl = edChainName
-        ParentColor = False
-        ParentFont = False
-      end
-    end
     object splitDetails: TSplitter
       Cursor = crVSplit
       Left = 2
       Height = 9
-      Top = 678
-      Width = 1054
+      Top = 229
+      Width = 1508
       Align = alBottom
       ResizeAnchor = akBottom
     end
     object mmLog: TMemo
       Left = 2
       Height = 300
-      Top = 687
-      Width = 1054
+      Top = 238
+      Width = 1508
       Align = alBottom
       ParentFont = False
       ScrollBars = ssAutoVertical
-      TabOrder = 3
+      TabOrder = 2
     end
   end
   object splitSidebar: TSplitter
-    Left = 442
-    Height = 989
-    Top = 35
-    Width = 12
+    Cursor = crVSplit
+    Left = 0
+    Height = 12
+    Top = 472
+    Width = 1512
+    Align = alTop
+    ResizeAnchor = akTop
   end
   object toolbarMain: TToolBar
     Left = 0
@@ -271,7 +154,7 @@ object fmMain: TfmMain
       MenuItem = miConnect
     end
     object btnChainInsert: TToolButton
-      Left = 48
+      Left = 44
       Top = 2
       Action = acChainInsert
     end
@@ -282,48 +165,58 @@ object fmMain: TfmMain
       Style = tbsSeparator
     end
     object btnChainDelete: TToolButton
-      Left = 83
+      Left = 79
       Top = 2
       Action = acChainDelete
     end
     object btnChainEdit: TToolButton
-      Left = 118
+      Left = 114
       Top = 2
       Action = acChainEdit
     end
     object btnChainRefresh: TToolButton
-      Left = 223
+      Left = 219
       Top = 2
       Action = acChainRefresh
     end
     object btnChainPost: TToolButton
-      Left = 153
+      Left = 149
       Top = 2
       Action = acChainPost
     end
     object btnChainCancel: TToolButton
-      Left = 188
+      Left = 184
       Top = 2
       Action = acChainCancel
+    end
+    object ToolButton1: TToolButton
+      Left = 254
+      Height = 33
+      Top = 2
+      Caption = 'ToolButton1'
+      Style = tbsSeparator
     end
   end
   object pnlChains: TPanel
     Left = 0
-    Height = 989
+    Height = 437
     Top = 35
-    Width = 442
-    Align = alLeft
+    Width = 1512
+    Align = alTop
+    BorderStyle = bsSingle
     Caption = 'pnlChains'
-    ClientHeight = 989
-    ClientWidth = 442
+    ClientHeight = 433
+    ClientWidth = 1508
     TabOrder = 0
     object gridChains: TDBGrid
       Left = 1
-      Height = 987
+      Height = 431
       Top = 1
-      Width = 440
+      Width = 1506
       Align = alClient
       AlternateColor = 16577773
+      AutoAdvance = aaRight
+      AutoEdit = False
       AutoFillColumns = True
       CellHintPriority = chpAll
       Color = clWindow
@@ -331,9 +224,9 @@ object fmMain: TfmMain
         item
           MinSize = 9
           MaxSize = 26
-          SizePriority = 0
+          Title.Alignment = taCenter
           Title.Caption = 'Chain Name'
-          Width = 180
+          Width = 262
           FieldName = 'chain_name'
         end      
         item
@@ -344,36 +237,63 @@ object fmMain: TfmMain
           SizePriority = 0
           Title.Alignment = taCenter
           Title.Caption = 'Live'
-          Width = 45
+          Width = 100
           FieldName = 'live'
+        end      
+        item
+          Title.Alignment = taCenter
+          Title.Caption = 'Run at'
+          Width = 262
+          FieldName = 'run_at'
+        end      
+        item
+          Title.Alignment = taCenter
+          Title.Caption = 'Client'
+          Width = 262
+          FieldName = 'client_name'
         end      
         item
           SizePriority = 0
           Title.Alignment = taCenter
-          Title.Caption = 'Run at'
-          Width = 106
-          FieldName = 'run_at'
+          Title.Caption = 'Exclusive'
+          Width = 150
+          FieldName = 'exclusive_execution'
         end      
         item
           SizePriority = 0
-          Title.Alignment = taLeftJustify
-          Title.Caption = 'Client'
-          Width = 90
-          FieldName = 'client_name'
+          Title.Alignment = taCenter
+          Title.Caption = 'Self Destruct'
+          Width = 150
+          FieldName = 'self_destruct'
+        end      
+        item
+          SizePriority = 0
+          Title.Alignment = taCenter
+          Title.Caption = 'Max Instances'
+          Width = 150
+          FieldName = 'max_instances'
+        end      
+        item
+          SizePriority = 0
+          Title.Alignment = taCenter
+          Title.Caption = 'Timeout (ms)'
+          Width = 150
+          FieldName = 'timeout'
         end>
       DataSource = dmPgEngine.dsChains
       DefaultRowHeight = 36
       Flat = True
-      Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderHotTracking, dgHeaderPushedLook, dgAutoSizeColumns, dgDisableInsert, dgCellHints, dgTruncCellHints, dgCellEllipsis, dgDisplayMemoText]
+      Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderHotTracking, dgHeaderPushedLook, dgDisableInsert, dgCellHints, dgTruncCellHints, dgCellEllipsis, dgDisplayMemoText]
       ParentFont = False
       Scrollbars = ssAutoVertical
       ShowHint = True
+      TabAdvance = aaRight
       TabOrder = 0
-      TitleImageList = imglSidebar
+      TitleImageList = imglGrids
       OnTitleClick = gridChainsTitleClick
     end
   end
-  object imglSidebar: TImageList
+  object imglGrids: TImageList
     Height = 24
     Width = 24
     Left = 120
@@ -815,16 +735,13 @@ object fmMain: TfmMain
     }
   end
   object menuMain: TMainMenu
-    Images = imglSidebar
+    Images = imglGrids
     Left = 15
     Top = 936
     object miFile: TMenuItem
       Caption = 'File'
       object miConnect: TMenuItem
         Action = acConnect
-      end
-      object miDisconnect: TMenuItem
-        Action = acDisconnect
       end
       object miClose: TMenuItem
         Caption = 'Close'
@@ -839,7 +756,7 @@ object fmMain: TfmMain
   end
   object alChains: TActionList
     Images = imglNavigator
-    Left = 216
+    Left = 224
     Top = 941
     object acConnect: TAction
       Category = 'Database'
@@ -849,12 +766,6 @@ object fmMain: TfmMain
       OnExecute = acConnectClick
       OnUpdate = acConnectUpdate
       ShortCut = 24643
-    end
-    object acDisconnect: TAction
-      Category = 'Database'
-      Caption = 'Disconnect from PostgreSQL'
-      OnExecute = acDisconnectExecute
-      OnUpdate = acDisconnectUpdate
     end
     object acChainInsert: TDataSetInsert
       Category = 'Database'
@@ -892,6 +803,7 @@ object fmMain: TfmMain
       Caption = 'P&ost'
       Hint = 'Post'
       ImageIndex = 4
+      DataSource = dmPgEngine.dsChains
     end
     object acChainCancel: TDataSetCancel
       Category = 'Database'
@@ -904,8 +816,8 @@ object fmMain: TfmMain
   object imglNavigator: TImageList
     Height = 24
     Width = 24
-    Left = 40
-    Top = 104
+    Left = 96
+    Top = 120
     Bitmap = {
       4C69070000001800000018000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1417,8 +1329,8 @@ object fmMain: TfmMain
   object imglNavigatorDisabled: TImageList
     Height = 24
     Width = 24
-    Left = 40
-    Top = 192
+    Left = 96
+    Top = 208
     Bitmap = {
       4C69070000001800000018000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

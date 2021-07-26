@@ -15,10 +15,7 @@ type
 
   TfmMain = class(TForm)
     acConnect: TAction;
-    acDisconnect: TAction;
     alChains: TActionList;
-    chkExclusive: TDBCheckBox;
-    chkSelfDestruct: TDBCheckBox;
     acChainInsert: TDataSetInsert;
     acChainDelete: TDataSetDelete;
     acChainEdit: TDataSetEdit;
@@ -26,20 +23,11 @@ type
     acChainPost: TDataSetPost;
     acChainCancel: TDataSetCancel;
     gridTasks: TDBGrid;
-    edClientName: TDBEdit;
-    edSchedule: TDBEdit;
-    edChainName: TDBEdit;
-    gbChain: TGroupBox;
     gridChains: TDBGrid;
     imglNavigatorDisabled: TImageList;
     imglNavigator: TImageList;
-    imglSidebar: TImageList;
-    lblSchedule: TLabel;
-    lblChainID: TDBText;
-    lblRunAt: TLabel;
-    lblChainName: TLabel;
+    imglGrids: TImageList;
     miConnect: TMenuItem;
-    miDisconnect: TMenuItem;
     mmLog: TMemo;
     menuMain: TMainMenu;
     miFile: TMenuItem;
@@ -59,6 +47,7 @@ type
     btnChainRefresh: TToolButton;
     btnChainPost: TToolButton;
     btnChainCancel: TToolButton;
+    ToolButton1: TToolButton;
     procedure acConnectUpdate(Sender: TObject);
     procedure acDisconnectExecute(Sender: TObject);
     procedure acDisconnectUpdate(Sender: TObject);
@@ -72,7 +61,7 @@ type
   private
     FLastColumn: TColumn; //last sorted grid column
   public
-
+    procedure UpdateSortIndication(ACol: TColumn);
   end;
 
 var
@@ -80,7 +69,7 @@ var
 
 implementation
 
-uses uDataModule, SQLDB;
+uses uDataModule, SQLDB, LCLType;
 
 {$R *.lfm}
 
@@ -142,10 +131,7 @@ begin
     Column.Title.ImageIndex := imgArrowDown;
     AQuery.IndexName := DESC_IndexName;
   end;
-  // Remove the sort arrow from the previous column we sorted
-  if Assigned(FLastColumn) and (FlastColumn <> Column) then
-    FLastColumn.Title.ImageIndex := -1;
-  FLastColumn := Column;
+  UpdateSortIndication(Column);
 end;
 
 procedure TfmMain.gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -161,14 +147,22 @@ begin
     else
       ImgIdx := 2;
   end;
-  aLeft := Rect.Left + Rect.Width - imglSidebar.Width - 2;
-  aTop := Rect.Top + (Rect.Height - imglSidebar.Height) div 2;
-  imglSidebar.Draw(gridTasks.Canvas, aLeft, aTop, ImgIdx);
+  aLeft := Rect.Left + Rect.Width - imglGrids.Width - 2;
+  aTop := Rect.Top + (Rect.Height - imglGrids.Height) div 2;
+  imglGrids.Draw(gridTasks.Canvas, aLeft, aTop, ImgIdx);
 end;
 
 procedure TfmMain.gridTasksEditButtonClick(Sender: TObject);
 begin
   ShowMessage(gridTasks.SelectedField.AsString);
+end;
+
+procedure TfmMain.UpdateSortIndication(ACol: TColumn);
+begin
+  // Remove the sort arrow from the previous column we sorted
+  if Assigned(FLastColumn) and (FLastColumn <> ACol) then
+    FLastColumn.Title.ImageIndex := -1;
+  FLastColumn := ACol;
 end;
 
 procedure TfmMain.btnCancelClick(Sender: TObject);
@@ -205,7 +199,10 @@ begin
         MessageDlg('PostgreSQL Error', E.Message, mtError, [mbOK], 0);
     end
   else
-    dmPgEngine.Disconnect;
+    begin
+      dmPgEngine.Disconnect;
+      UpdateSortIndication(nil);
+    end;
 end;
 
 end.

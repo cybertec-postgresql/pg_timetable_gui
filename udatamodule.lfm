@@ -6,7 +6,6 @@ object dmPgEngine: TdmPgEngine
   Width = 668
   PPI = 144
   object dsChains: TDataSource
-    AutoEdit = False
     DataSet = qryChains
     Left = 108
     Top = 48
@@ -30,6 +29,7 @@ object dmPgEngine: TdmPgEngine
     IndexName = 'DEFAULT_ORDER'
     MaxIndexesCount = 20
     FieldDefs = <>
+    AfterClose = qryChainsAfterClose
     AfterDelete = qryChainsAfterDelete
     AfterInsert = qryChainsAfterInsert
     AfterPost = qryChainsAfterPost
@@ -46,7 +46,9 @@ object dmPgEngine: TdmPgEngine
       '  live,'
       '  self_destruct,'
       '  exclusive_execution,'
-      '  client_name :: varchar(100) as client_name'
+      '  client_name :: varchar(100) as client_name,'
+      '  timeout,'
+      '  max_instances'
       'FROM timetable.chain'
       'ORDER BY chain_id'
     )
@@ -59,7 +61,8 @@ object dmPgEngine: TdmPgEngine
       #9'"live",'
       #9'"self_destruct",'
       #9'"exclusive_execution",'
-      #9'"client_name"'
+      #9'"client_name",'
+      '  "timeout"'
       ') VALUES ('
       #9'timetable.add_task(''SQL'', ''SELECT 1'', NULL),'
       #9':"chain_name",'
@@ -68,7 +71,8 @@ object dmPgEngine: TdmPgEngine
       #9':"live",'
       #9':"self_destruct",'
       #9':"exclusive_execution",'
-      #9':"client_name"'
+      #9':"client_name",'
+      '  :"timeout"'
       ')'
     )
     UpdateSQL.Strings = (
@@ -81,7 +85,8 @@ object dmPgEngine: TdmPgEngine
       #9'"live"=:"live",'
       #9'"self_destruct"=:"self_destruct",'
       #9'"exclusive_execution"=:"exclusive_execution",'
-      #9'"client_name"=:"client_name"'
+      #9'"client_name"=:"client_name",'
+      '  "timeout"=:"timeout"'
       'WHERE'
       #9'"chain_id"= :"OLD_chain_id"'
     )
