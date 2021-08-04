@@ -41,13 +41,13 @@ type
     toolbarMain: TToolBar;
     btnConnect: TToolButton;
     btnChainInsert: TToolButton;
-    btnSeparator: TToolButton;
+    btnSep1: TToolButton;
     btnChainDelete: TToolButton;
     btnChainEdit: TToolButton;
     btnChainRefresh: TToolButton;
     btnChainPost: TToolButton;
     btnChainCancel: TToolButton;
-    ToolButton1: TToolButton;
+    btnSep2: TToolButton;
     procedure acConnectUpdate(Sender: TObject);
     procedure acDisconnectExecute(Sender: TObject);
     procedure acDisconnectUpdate(Sender: TObject);
@@ -58,6 +58,7 @@ type
     procedure gridChainsTitleClick(Column: TColumn);
     procedure gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: integer; Column: TColumn; State: TGridDrawState);
+    procedure miCloseClick(Sender: TObject);
   private
     FLastColumn: TColumn; //last sorted grid column
   public
@@ -162,6 +163,11 @@ begin
   aLeft := Rect.Left + Rect.Width - imglGrids.Width - 2;
   aTop := Rect.Top + (Rect.Height - imglGrids.Height) div 2;
   imglGrids.Draw(gridTasks.Canvas, aLeft, aTop, ImgIdx);
+end;
+
+procedure TfmMain.miCloseClick(Sender: TObject);
+begin
+  Close();
 end;
 
 procedure TfmMain.UpdateSortIndication(ACol: TColumn);
