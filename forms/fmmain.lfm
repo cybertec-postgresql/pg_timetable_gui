@@ -105,7 +105,6 @@ object fmMain: TfmMain
       ShowHint = True
       TabOrder = 0
       OnDrawColumnCell = gridTasksDrawColumnCell
-      OnEditButtonClick = gridTasksEditButtonClick
     end
     object splitDetails: TSplitter
       Cursor = crVSplit
@@ -241,6 +240,12 @@ object fmMain: TfmMain
           FieldName = 'live'
         end      
         item
+          PickList.Strings = (
+            '* * * * *'
+            '@every <interval>'
+            '@after <interval>'
+            '@reboot'
+          )
           Title.Alignment = taCenter
           Title.Caption = 'Run at'
           Width = 262
@@ -290,6 +295,7 @@ object fmMain: TfmMain
       TabAdvance = aaRight
       TabOrder = 0
       TitleImageList = imglGrids
+      OnEditingDone = gridChainsEditingDone
       OnTitleClick = gridChainsTitleClick
     end
   end
