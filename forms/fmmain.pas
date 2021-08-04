@@ -41,23 +41,24 @@ type
     toolbarMain: TToolBar;
     btnConnect: TToolButton;
     btnChainInsert: TToolButton;
-    btnSeparator: TToolButton;
+    btnSep1: TToolButton;
     btnChainDelete: TToolButton;
     btnChainEdit: TToolButton;
     btnChainRefresh: TToolButton;
     btnChainPost: TToolButton;
     btnChainCancel: TToolButton;
-    ToolButton1: TToolButton;
+    btnSep2: TToolButton;
     procedure acConnectUpdate(Sender: TObject);
     procedure acDisconnectExecute(Sender: TObject);
     procedure acDisconnectUpdate(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure acConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
+    procedure gridChainsEditingDone(Sender: TObject);
     procedure gridChainsTitleClick(Column: TColumn);
     procedure gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: integer; Column: TColumn; State: TGridDrawState);
-    procedure gridTasksEditButtonClick(Sender: TObject);
+    procedure miCloseClick(Sender: TObject);
   private
     FLastColumn: TColumn; //last sorted grid column
   public
@@ -69,7 +70,7 @@ var
 
 implementation
 
-uses uDataModule, SQLDB, LCLType;
+uses uDataModule, SQLDB, LCLType, RegExpr;
 
 {$R *.lfm}
 
@@ -79,6 +80,18 @@ procedure TfmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   dmPgEngine.Disconnect;
   CanClose := True;
+end;
+
+procedure TfmMain.gridChainsEditingDone(Sender: TObject);
+var
+  S: string;
+  F: TField;
+begin
+  F := gridChains.SelectedField;
+  if not Assigned(F) or (F.FieldName <> 'run_at') or gridChains.EditorMode then Exit;
+  S := F.AsString;
+  if not dmPgEngine.IsCronValueValid(S) then
+    MessageDlg('Cron Syntax Error', 'You have error in the cron value: ' + S, mtError, [mbOK], 0);
 end;
 
 procedure TfmMain.gridChainsTitleClick(Column: TColumn);
@@ -152,9 +165,9 @@ begin
   imglGrids.Draw(gridTasks.Canvas, aLeft, aTop, ImgIdx);
 end;
 
-procedure TfmMain.gridTasksEditButtonClick(Sender: TObject);
+procedure TfmMain.miCloseClick(Sender: TObject);
 begin
-  ShowMessage(gridTasks.SelectedField.AsString);
+  Close();
 end;
 
 procedure TfmMain.UpdateSortIndication(ACol: TColumn);
