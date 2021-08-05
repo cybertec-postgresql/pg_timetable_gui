@@ -117,10 +117,12 @@ var
   F: TField;
 begin
   F := gridChains.SelectedField;
-  if not Assigned(F) or (F.FieldName <> 'run_at') or gridChains.EditorMode then Exit;
+  if not Assigned(F) or (F.FieldName <> 'run_at') or gridChains.EditorMode then
+    Exit;
   S := F.AsString;
   if not dmPgEngine.IsCronValueValid(S) then
-    MessageDlg('Cron Syntax Error', 'You have error in the cron value: ' + S, mtError, [mbOK], 0);
+    MessageDlg('Cron Syntax Error', 'You have error in the cron value: ' + S,
+      mtError, [mbOK], 0);
 end;
 
 procedure TfmMain.gridChainsTitleClick(Column: TColumn);
@@ -214,11 +216,12 @@ end;
 
 procedure TfmMain.acChainToolbarUpdate(Sender: TObject);
 var
-  CanModify: Boolean;
+  CanModify: boolean;
 begin
   CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
   acChainAdd.Enabled := CanModify;
-  acChainDelete.Enabled:= CanModify and (not (dmPgEngine.qryChains.BOF and dmPgEngine.qryChains.EOF));
+  acChainDelete.Enabled := CanModify and
+    (not (dmPgEngine.qryChains.BOF and dmPgEngine.qryChains.EOF));
   acChainEdit.Enabled := CanModify and not (dmPgEngine.qryChains.State in dsEditModes);
   acChainPost.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
   acChainCancel.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
@@ -286,18 +289,19 @@ begin
 end;
 
 procedure TfmMain.acTaskToolbarUpdate(Sender: TObject);
-  var
-    CanModify: Boolean;
+var
+  CanModify: boolean;
 begin
-    CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
-    acTaskAdd.Enabled := CanModify;
-    acMoveTaskUp.Enabled := CanModify and not dmPgEngine.qryTasks.BOF;
-    acMoveTaskDown.Enabled := CanModify and not dmPgEngine.qryTasks.EOF;
-    acTaskDelete.Enabled:= CanModify and (not (dmPgEngine.qryTasks.BOF and dmPgEngine.qryTasks.EOF));
-    acTaskEdit.Enabled := CanModify and not (dmPgEngine.qryTasks.State in dsEditModes);
-    acTaskPost.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
-    acTaskCancel.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
-    acTaskRefresh.Enabled := CanModify;
+  CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
+  acTaskAdd.Enabled := CanModify;
+  acMoveTaskUp.Enabled := CanModify and not dmPgEngine.qryTasks.BOF;
+  acMoveTaskDown.Enabled := CanModify and not dmPgEngine.qryTasks.EOF;
+  acTaskDelete.Enabled := CanModify and
+    (not (dmPgEngine.qryTasks.BOF and dmPgEngine.qryTasks.EOF));
+  acTaskEdit.Enabled := CanModify and not (dmPgEngine.qryTasks.State in dsEditModes);
+  acTaskPost.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
+  acTaskCancel.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
+  acTaskRefresh.Enabled := CanModify;
 end;
 
 procedure TfmMain.acConnectClick(Sender: TObject);
@@ -312,10 +316,10 @@ begin
         MessageDlg('PostgreSQL Error', E.Message, mtError, [mbOK], 0);
     end
   else
-    begin
-      dmPgEngine.Disconnect;
-      UpdateSortIndication(nil);
-    end;
+  begin
+    dmPgEngine.Disconnect;
+    UpdateSortIndication(nil);
+  end;
 end;
 
 end.
