@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
   StdCtrls, DBGrids, DBCtrls, ExtCtrls, RTTIGrids, RTTICtrls, uObjects,
-  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList, DBActns;
+  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList, Buttons;
 
 type
 
@@ -15,17 +15,26 @@ type
 
   TfmMain = class(TForm)
     acConnect: TAction;
-    alChains: TActionList;
-    acChainInsert: TDataSetInsert;
-    acChainDelete: TDataSetDelete;
-    acChainEdit: TDataSetEdit;
-    acChainRefresh: TDataSetRefresh;
-    acChainPost: TDataSetPost;
-    acChainCancel: TDataSetCancel;
+    acMoveTaskUp: TAction;
+    acMoveTaskDown: TAction;
+    acTaskDelete: TAction;
+    acTaskAdd: TAction;
+    acTaskEdit: TAction;
+    acTaskPost: TAction;
+    acTaskCancel: TAction;
+    acTaskRefresh: TAction;
+    acChainAdd: TAction;
+    acChainDelete: TAction;
+    acChainEdit: TAction;
+    acChainPost: TAction;
+    acChainCancel: TAction;
+    acChainRefresh: TAction;
+    alToolbars: TActionList;
+    btnTaskMoveUp: TToolButton;
     gridTasks: TDBGrid;
     gridChains: TDBGrid;
-    imglNavigatorDisabled: TImageList;
-    imglNavigator: TImageList;
+    imglToolbarsDisabled: TImageList;
+    imglToolbars: TImageList;
     imglGrids: TImageList;
     miConnect: TMenuItem;
     mmLog: TMemo;
@@ -34,24 +43,43 @@ type
     miClose: TMenuItem;
     miHelp: TMenuItem;
     miAbout: TMenuItem;
+    pnlMainToolbar: TPanel;
     pnlChains: TPanel;
     pnlDetails: TPanel;
-    splitSidebar: TSplitter;
+    splitChain: TSplitter;
     splitDetails: TSplitter;
+    toolbarChains: TToolBar;
     toolbarMain: TToolBar;
     btnConnect: TToolButton;
-    btnChainInsert: TToolButton;
-    btnSep1: TToolButton;
+    toolbarTasks: TToolBar;
+    btnTaskMoveDown: TToolButton;
+    btnTaskAdd: TToolButton;
+    btnTaskSep1: TToolButton;
+    btnTaskDelete: TToolButton;
+    btnTaskEdit: TToolButton;
+    btnTaskPost: TToolButton;
+    btnTaskCancel: TToolButton;
+    btnTaskRefresh: TToolButton;
+    btnChainAdd: TToolButton;
     btnChainDelete: TToolButton;
     btnChainEdit: TToolButton;
-    btnChainRefresh: TToolButton;
     btnChainPost: TToolButton;
     btnChainCancel: TToolButton;
-    btnSep2: TToolButton;
-    procedure acConnectUpdate(Sender: TObject);
-    procedure acDisconnectExecute(Sender: TObject);
-    procedure acDisconnectUpdate(Sender: TObject);
-    procedure btnCancelClick(Sender: TObject);
+    btnChainRefresh: TToolButton;
+    procedure acChainAddExecute(Sender: TObject);
+    procedure acChainCancelExecute(Sender: TObject);
+    procedure acChainDeleteExecute(Sender: TObject);
+    procedure acChainEditExecute(Sender: TObject);
+    procedure acChainPostExecute(Sender: TObject);
+    procedure acChainRefreshExecute(Sender: TObject);
+    procedure acChainToolbarUpdate(Sender: TObject);
+    procedure acTaskAddExecute(Sender: TObject);
+    procedure acTaskCancelExecute(Sender: TObject);
+    procedure acTaskDeleteExecute(Sender: TObject);
+    procedure acTaskEditExecute(Sender: TObject);
+    procedure acTaskPostExecute(Sender: TObject);
+    procedure acTaskRefreshExecute(Sender: TObject);
+    procedure acTaskToolbarUpdate(Sender: TObject);
     procedure acConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure gridChainsEditingDone(Sender: TObject);
@@ -88,10 +116,12 @@ var
   F: TField;
 begin
   F := gridChains.SelectedField;
-  if not Assigned(F) or (F.FieldName <> 'run_at') or gridChains.EditorMode then Exit;
+  if not Assigned(F) or (F.FieldName <> 'run_at') or gridChains.EditorMode then
+    Exit;
   S := F.AsString;
   if not dmPgEngine.IsCronValueValid(S) then
-    MessageDlg('Cron Syntax Error', 'You have error in the cron value: ' + S, mtError, [mbOK], 0);
+    MessageDlg('Cron Syntax Error', 'You have error in the cron value: ' + S,
+      mtError, [mbOK], 0);
 end;
 
 procedure TfmMain.gridChainsTitleClick(Column: TColumn);
@@ -178,26 +208,94 @@ begin
   FLastColumn := ACol;
 end;
 
-procedure TfmMain.btnCancelClick(Sender: TObject);
+procedure TfmMain.acChainToolbarUpdate(Sender: TObject);
+var
+  CanModify: boolean;
+begin
+  CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
+  acChainAdd.Enabled := CanModify;
+  acChainDelete.Enabled := CanModify and
+    (not (dmPgEngine.qryChains.BOF and dmPgEngine.qryChains.EOF));
+  acChainEdit.Enabled := CanModify and not (dmPgEngine.qryChains.State in dsEditModes);
+  acChainPost.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
+  acChainCancel.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
+  acChainRefresh.Enabled := CanModify;
+end;
+
+procedure TfmMain.acChainAddExecute(Sender: TObject);
+begin
+  dmPgEngine.qryChains.Append;
+end;
+
+procedure TfmMain.acChainCancelExecute(Sender: TObject);
 begin
   dmPgEngine.qryChains.Cancel;
 end;
 
-procedure TfmMain.acConnectUpdate(Sender: TObject);
+procedure TfmMain.acChainDeleteExecute(Sender: TObject);
 begin
-  //(Sender as TAction).Enabled := not dmPgEngine.PQConn.Connected;
-  btnConnect.Down := dmPgEngine.PQConn.Connected;
-  miConnect.Checked := btnConnect.Down;
+  dmPgEngine.qryChains.Delete;
 end;
 
-procedure TfmMain.acDisconnectExecute(Sender: TObject);
+procedure TfmMain.acChainEditExecute(Sender: TObject);
 begin
-  dmPgEngine.Disconnect;
+  dmPgEngine.qryChains.Edit;
 end;
 
-procedure TfmMain.acDisconnectUpdate(Sender: TObject);
+procedure TfmMain.acChainPostExecute(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := dmPgEngine.PQConn.Connected;
+  dmPgEngine.qryChains.Post;
+end;
+
+procedure TfmMain.acChainRefreshExecute(Sender: TObject);
+begin
+  dmPgEngine.qryChains.Refresh;
+end;
+
+procedure TfmMain.acTaskAddExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Append;
+end;
+
+procedure TfmMain.acTaskCancelExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Cancel;
+end;
+
+procedure TfmMain.acTaskDeleteExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Delete;
+end;
+
+procedure TfmMain.acTaskEditExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Edit;
+end;
+
+procedure TfmMain.acTaskPostExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Post;
+end;
+
+procedure TfmMain.acTaskRefreshExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Refresh;
+end;
+
+procedure TfmMain.acTaskToolbarUpdate(Sender: TObject);
+var
+  CanModify: boolean;
+begin
+  CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
+  acTaskAdd.Enabled := CanModify;
+  acMoveTaskUp.Enabled := CanModify and not dmPgEngine.qryTasks.BOF;
+  acMoveTaskDown.Enabled := CanModify and not dmPgEngine.qryTasks.EOF;
+  acTaskDelete.Enabled := CanModify and
+    (not (dmPgEngine.qryTasks.BOF and dmPgEngine.qryTasks.EOF));
+  acTaskEdit.Enabled := CanModify and not (dmPgEngine.qryTasks.State in dsEditModes);
+  acTaskPost.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
+  acTaskCancel.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
+  acTaskRefresh.Enabled := CanModify;
 end;
 
 procedure TfmMain.acConnectClick(Sender: TObject);
@@ -212,10 +310,10 @@ begin
         MessageDlg('PostgreSQL Error', E.Message, mtError, [mbOK], 0);
     end
   else
-    begin
-      dmPgEngine.Disconnect;
-      UpdateSortIndication(nil);
-    end;
+  begin
+    dmPgEngine.Disconnect;
+    UpdateSortIndication(nil);
+  end;
 end;
 
 end.

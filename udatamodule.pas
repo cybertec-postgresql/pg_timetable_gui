@@ -31,6 +31,8 @@ type
     procedure Connect;
     procedure Disconnect;
     function IsCronValueValid(const S: string): boolean;
+    function IsConnected: boolean;
+    function SelectSQL(const sql: string): string;
   end;
 
 var
@@ -141,5 +143,35 @@ begin
   end;
 end;
 
+function TdmPgEngine.IsConnected: boolean;
+begin
+  Result := qryChains.Active and qryTasks.Active;
+end;
+
+function TdmPgEngine.SelectSQL(const sql: string): string;
+var
+  Q: TSQLQuery;
+begin
+  Result := '';
+  Q := TSQLQuery.Create(nil);
+  try
+    Q.DataBase := PQConn;
+    Q.Transaction := PQConn.Transaction;
+    Q.SQL.Text := sql;
+    try
+      Q.Open;
+      while not Q.EOF do
+      begin
+        Result := Result + LineEnding + Q.Fields[0].AsString;
+        Q.Next;
+      end;
+    except
+      Exit;
+    end;
+    Q.Close;
+  finally
+    FreeAndNil(Q);
+  end;
+end;
 
 end.

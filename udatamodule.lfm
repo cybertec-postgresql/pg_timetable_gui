@@ -1,8 +1,8 @@
 object dmPgEngine: TdmPgEngine
   OldCreateOrder = False
   Height = 524
-  HorizontalOffset = 1650
-  VerticalOffset = 828
+  HorizontalOffset = 2019
+  VerticalOffset = 712
   Width = 668
   PPI = 144
   object dsChains: TDataSource
@@ -113,57 +113,58 @@ object dmPgEngine: TdmPgEngine
     PacketRecords = -1
     IndexName = 'DEFAULT_ORDER'
     MaxIndexesCount = 4
-    FieldDefs = <    
-      item
-        Name = 'task_id'
-        DataType = ftLargeint
-        Precision = -1
-      end    
-      item
-        Name = 'command'
-        DataType = ftMemo
-        Precision = -1
-      end    
-      item
-        Name = 'kind'
-        DataType = ftString
-        Precision = -1
-        Size = 64
-      end    
-      item
-        Name = 'run_as'
-        DataType = ftMemo
-        Precision = -1
-      end    
-      item
-        Name = 'ignore_error'
-        DataType = ftBoolean
-        Precision = -1
-      end    
-      item
-        Name = 'autonomous'
-        DataType = ftBoolean
-        Precision = -1
-      end    
-      item
-        Name = 'connect_string'
-        DataType = ftMemo
-        Precision = -1
-      end>
+    FieldDefs = <>
     Database = PQConn
     Transaction = transChains
     SQL.Strings = (
-      'WITH RECURSIVE x'
-      '(task_id, command, kind, run_as, ignore_error, autonomous, connect_string)'
-      'AS ('
-      #9'SELECT tc.task_id, tc.command, tc.kind, tc.run_as, tc.ignore_error, tc.autonomous, tc.database_connection'
-      #9'FROM timetable.task tc'
-      #9'WHERE tc.parent_id IS NULL AND tc.task_id = :"task_id"'
-      'UNION ALL'
-      #9'SELECT tc.task_id, tc.command, tc.kind, tc.run_as, tc.ignore_error, tc.autonomous, tc.database_connection'
-      #9'FROM timetable.task tc JOIN x ON (x.task_id = tc.parent_id)'
-      ')'
-      #9'SELECT * FROM x'
+      'WITH RECURSIVE x ('
+      '    parent_id,'
+      '    task_id,'
+      '    command,'
+      '    kind,'
+      '    run_as,'
+      '    ignore_error,'
+      '    autonomous,'
+      '    connect_string'
+      ') AS ('
+      '    SELECT'
+      '        NULL::bigint,'
+      '        tc.task_id,'
+      '        tc.command,'
+      '        tc.kind,'
+      '        tc.run_as,'
+      '        tc.ignore_error,'
+      '        tc.autonomous,'
+      '        tc.database_connection'
+      '    FROM'
+      '        timetable.task tc'
+      '    WHERE'
+      '        tc.parent_id IS NULL'
+      '        AND tc.task_id = :"task_id"'
+      '    UNION ALL'
+      '    SELECT'
+      '        tc.parent_id,'
+      '        tc.task_id,'
+      '        tc.command,'
+      '        tc.kind,'
+      '        tc.run_as,'
+      '        tc.ignore_error,'
+      '        tc.autonomous,'
+      '        tc.database_connection'
+      '    FROM'
+      '        timetable.task tc'
+      '        JOIN x ON (x.task_id = tc.parent_id))'
+      'SELECT'
+      '    *'
+      'FROM'
+      '    x'
+    )
+    InsertSQL.Strings = (
+      'INSERT INTO timetable.task'
+      '(parent_id, task_name, kind, command, run_as, database_connection, ignore_error, autonomous, timeout)'
+      'VALUES'
+      '(0, '''',''SQL'', '''', '''', '''', false, false, 0)'
+      ''
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit, sqoRefreshUsingSelect]
     Params = <    
@@ -173,6 +174,7 @@ object dmPgEngine: TdmPgEngine
         ParamType = ptInput
         Size = 8
       end>
+    ParseSQL = False
     UpdateMode = upWhereAll
     DataSource = dsChains
     Left = 192
