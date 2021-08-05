@@ -80,7 +80,6 @@ type
     procedure acTaskPostExecute(Sender: TObject);
     procedure acTaskRefreshExecute(Sender: TObject);
     procedure acTaskToolbarUpdate(Sender: TObject);
-    procedure btnCancelClick(Sender: TObject);
     procedure acConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure gridChainsEditingDone(Sender: TObject);
@@ -207,11 +206,6 @@ begin
   if Assigned(FLastColumn) and (FLastColumn <> ACol) then
     FLastColumn.Title.ImageIndex := -1;
   FLastColumn := ACol;
-end;
-
-procedure TfmMain.btnCancelClick(Sender: TObject);
-begin
-  dmPgEngine.qryChains.Cancel;
 end;
 
 procedure TfmMain.acChainToolbarUpdate(Sender: TObject);
