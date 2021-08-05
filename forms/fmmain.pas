@@ -7,8 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
   StdCtrls, DBGrids, DBCtrls, ExtCtrls, RTTIGrids, RTTICtrls, uObjects,
-  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList, DBActns,
-  Buttons;
+  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList, Buttons;
 
 type
 
@@ -24,14 +23,16 @@ type
     acTaskPost: TAction;
     acTaskCancel: TAction;
     acTaskRefresh: TAction;
+    acChainAdd: TAction;
+    acChainDelete: TAction;
+    acChainEdit: TAction;
+    acChainPost: TAction;
+    acChainCancel: TAction;
+    acChainRefresh: TAction;
     alToolbars: TActionList;
     btnTaskMoveUp: TToolButton;
-    dbnavChains: TDBNavigator;
-    dbnavTasks: TDBNavigator;
     gridTasks: TDBGrid;
     gridChains: TDBGrid;
-    ImageList1: TImageList;
-    imglDBNavigator: TImageList;
     imglToolbarsDisabled: TImageList;
     imglToolbars: TImageList;
     imglGrids: TImageList;
@@ -45,8 +46,9 @@ type
     pnlMainToolbar: TPanel;
     pnlChains: TPanel;
     pnlDetails: TPanel;
-    splitSidebar: TSplitter;
+    splitChain: TSplitter;
     splitDetails: TSplitter;
+    toolbarChains: TToolBar;
     toolbarMain: TToolBar;
     btnConnect: TToolButton;
     toolbarTasks: TToolBar;
@@ -58,15 +60,26 @@ type
     btnTaskPost: TToolButton;
     btnTaskCancel: TToolButton;
     btnTaskRefresh: TToolButton;
-    procedure acDisconnectExecute(Sender: TObject);
-    procedure acDisconnectUpdate(Sender: TObject);
+    btnChainAdd: TToolButton;
+    btnChainDelete: TToolButton;
+    btnChainEdit: TToolButton;
+    btnChainPost: TToolButton;
+    btnChainCancel: TToolButton;
+    btnChainRefresh: TToolButton;
+    procedure acChainAddExecute(Sender: TObject);
+    procedure acChainCancelExecute(Sender: TObject);
+    procedure acChainDeleteExecute(Sender: TObject);
+    procedure acChainEditExecute(Sender: TObject);
+    procedure acChainPostExecute(Sender: TObject);
+    procedure acChainRefreshExecute(Sender: TObject);
+    procedure acChainToolbarUpdate(Sender: TObject);
     procedure acTaskAddExecute(Sender: TObject);
     procedure acTaskCancelExecute(Sender: TObject);
     procedure acTaskDeleteExecute(Sender: TObject);
     procedure acTaskEditExecute(Sender: TObject);
     procedure acTaskPostExecute(Sender: TObject);
     procedure acTaskRefreshExecute(Sender: TObject);
-    procedure acUpdateToolbarsUpdate(Sender: TObject);
+    procedure acTaskToolbarUpdate(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure acConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -199,14 +212,47 @@ begin
   dmPgEngine.qryChains.Cancel;
 end;
 
-procedure TfmMain.acDisconnectExecute(Sender: TObject);
+procedure TfmMain.acChainToolbarUpdate(Sender: TObject);
+var
+  CanModify: Boolean;
 begin
-  dmPgEngine.Disconnect;
+  CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
+  acChainAdd.Enabled := CanModify;
+  acChainDelete.Enabled:= CanModify and (not (dmPgEngine.qryChains.BOF and dmPgEngine.qryChains.EOF));
+  acChainEdit.Enabled := CanModify and not (dmPgEngine.qryChains.State in dsEditModes);
+  acChainPost.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
+  acChainCancel.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
+  acChainRefresh.Enabled := CanModify;
 end;
 
-procedure TfmMain.acDisconnectUpdate(Sender: TObject);
+procedure TfmMain.acChainAddExecute(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := dmPgEngine.PQConn.Connected;
+  dmPgEngine.qryChains.Append;
+end;
+
+procedure TfmMain.acChainCancelExecute(Sender: TObject);
+begin
+  dmPgEngine.qryChains.Cancel;
+end;
+
+procedure TfmMain.acChainDeleteExecute(Sender: TObject);
+begin
+  dmPgEngine.qryChains.Delete;
+end;
+
+procedure TfmMain.acChainEditExecute(Sender: TObject);
+begin
+  dmPgEngine.qryChains.Edit;
+end;
+
+procedure TfmMain.acChainPostExecute(Sender: TObject);
+begin
+  dmPgEngine.qryChains.Post;
+end;
+
+procedure TfmMain.acChainRefreshExecute(Sender: TObject);
+begin
+  dmPgEngine.qryChains.Refresh;
 end;
 
 procedure TfmMain.acTaskAddExecute(Sender: TObject);
@@ -239,7 +285,7 @@ begin
   dmPgEngine.qryTasks.Refresh;
 end;
 
-procedure TfmMain.acUpdateToolbarsUpdate(Sender: TObject);
+procedure TfmMain.acTaskToolbarUpdate(Sender: TObject);
   var
     CanModify: Boolean;
 begin
