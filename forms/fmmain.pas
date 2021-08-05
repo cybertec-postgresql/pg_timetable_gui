@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
   StdCtrls, DBGrids, DBCtrls, ExtCtrls, RTTIGrids, RTTICtrls, uObjects,
-  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList, DBActns;
+  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList, DBActns,
+  Buttons;
 
 type
 
@@ -15,17 +16,24 @@ type
 
   TfmMain = class(TForm)
     acConnect: TAction;
-    alChains: TActionList;
-    acChainInsert: TDataSetInsert;
-    acChainDelete: TDataSetDelete;
-    acChainEdit: TDataSetEdit;
-    acChainRefresh: TDataSetRefresh;
-    acChainPost: TDataSetPost;
-    acChainCancel: TDataSetCancel;
+    acMoveTaskUp: TAction;
+    acMoveTaskDown: TAction;
+    acTaskDelete: TAction;
+    acTaskAdd: TAction;
+    acTaskEdit: TAction;
+    acTaskPost: TAction;
+    acTaskCancel: TAction;
+    acTaskRefresh: TAction;
+    alToolbars: TActionList;
+    btnTaskMoveUp: TToolButton;
+    dbnavChains: TDBNavigator;
+    dbnavTasks: TDBNavigator;
     gridTasks: TDBGrid;
     gridChains: TDBGrid;
-    imglNavigatorDisabled: TImageList;
-    imglNavigator: TImageList;
+    ImageList1: TImageList;
+    imglDBNavigator: TImageList;
+    imglToolbarsDisabled: TImageList;
+    imglToolbars: TImageList;
     imglGrids: TImageList;
     miConnect: TMenuItem;
     mmLog: TMemo;
@@ -34,23 +42,31 @@ type
     miClose: TMenuItem;
     miHelp: TMenuItem;
     miAbout: TMenuItem;
+    pnlMainToolbar: TPanel;
     pnlChains: TPanel;
     pnlDetails: TPanel;
     splitSidebar: TSplitter;
     splitDetails: TSplitter;
     toolbarMain: TToolBar;
     btnConnect: TToolButton;
-    btnChainInsert: TToolButton;
-    btnSep1: TToolButton;
-    btnChainDelete: TToolButton;
-    btnChainEdit: TToolButton;
-    btnChainRefresh: TToolButton;
-    btnChainPost: TToolButton;
-    btnChainCancel: TToolButton;
-    btnSep2: TToolButton;
-    procedure acConnectUpdate(Sender: TObject);
+    toolbarTasks: TToolBar;
+    btnTaskMoveDown: TToolButton;
+    btnTaskAdd: TToolButton;
+    btnTaskSep1: TToolButton;
+    btnTaskDelete: TToolButton;
+    btnTaskEdit: TToolButton;
+    btnTaskPost: TToolButton;
+    btnTaskCancel: TToolButton;
+    btnTaskRefresh: TToolButton;
     procedure acDisconnectExecute(Sender: TObject);
     procedure acDisconnectUpdate(Sender: TObject);
+    procedure acTaskAddExecute(Sender: TObject);
+    procedure acTaskCancelExecute(Sender: TObject);
+    procedure acTaskDeleteExecute(Sender: TObject);
+    procedure acTaskEditExecute(Sender: TObject);
+    procedure acTaskPostExecute(Sender: TObject);
+    procedure acTaskRefreshExecute(Sender: TObject);
+    procedure acUpdateToolbarsUpdate(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure acConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -183,13 +199,6 @@ begin
   dmPgEngine.qryChains.Cancel;
 end;
 
-procedure TfmMain.acConnectUpdate(Sender: TObject);
-begin
-  //(Sender as TAction).Enabled := not dmPgEngine.PQConn.Connected;
-  btnConnect.Down := dmPgEngine.PQConn.Connected;
-  miConnect.Checked := btnConnect.Down;
-end;
-
 procedure TfmMain.acDisconnectExecute(Sender: TObject);
 begin
   dmPgEngine.Disconnect;
@@ -198,6 +207,51 @@ end;
 procedure TfmMain.acDisconnectUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := dmPgEngine.PQConn.Connected;
+end;
+
+procedure TfmMain.acTaskAddExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Append;
+end;
+
+procedure TfmMain.acTaskCancelExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Cancel;
+end;
+
+procedure TfmMain.acTaskDeleteExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Delete;
+end;
+
+procedure TfmMain.acTaskEditExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Edit;
+end;
+
+procedure TfmMain.acTaskPostExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Post;
+end;
+
+procedure TfmMain.acTaskRefreshExecute(Sender: TObject);
+begin
+  dmPgEngine.qryTasks.Refresh;
+end;
+
+procedure TfmMain.acUpdateToolbarsUpdate(Sender: TObject);
+  var
+    CanModify: Boolean;
+begin
+    CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
+    acTaskAdd.Enabled := CanModify;
+    acMoveTaskUp.Enabled := CanModify and not dmPgEngine.qryTasks.BOF;
+    acMoveTaskDown.Enabled := CanModify and not dmPgEngine.qryTasks.EOF;
+    acTaskDelete.Enabled:= CanModify and (not (dmPgEngine.qryTasks.BOF and dmPgEngine.qryTasks.EOF));
+    acTaskEdit.Enabled := CanModify and not (dmPgEngine.qryTasks.State in dsEditModes);
+    acTaskPost.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
+    acTaskCancel.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
+    acTaskRefresh.Enabled := CanModify;
 end;
 
 procedure TfmMain.acConnectClick(Sender: TObject);
