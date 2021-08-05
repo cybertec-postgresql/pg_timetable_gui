@@ -31,6 +31,7 @@ type
     procedure Connect;
     procedure Disconnect;
     function IsCronValueValid(const S: string): boolean;
+    function IsConnected: boolean;
   end;
 
 var
@@ -139,6 +140,11 @@ begin
   finally
     FreeAndNil(Q);
   end;
+end;
+
+function TdmPgEngine.IsConnected: boolean;
+begin
+  Result := qryChains.Active and qryTasks.Active;
 end;
 
 
