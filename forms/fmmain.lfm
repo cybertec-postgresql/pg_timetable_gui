@@ -309,6 +309,8 @@ object fmMain: TfmMain
       Align = alTop
       ClientHeight = 42
       ClientWidth = 1506
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 1
       object toolbarMain: TToolBar
         Left = 1
@@ -796,6 +798,7 @@ object fmMain: TfmMain
       Category = 'Tasks'
       Caption = 'acTaskDelete'
       DisableIfNoHandler = False
+      Hint = 'Delete selected task'
       ImageIndex = 4
       OnExecute = acTaskDeleteExecute
       OnUpdate = acTaskToolbarUpdate
@@ -813,6 +816,7 @@ object fmMain: TfmMain
       Category = 'Tasks'
       Caption = 'acTaskEdit'
       DisableIfNoHandler = False
+      Hint = 'Edit selected task'
       ImageIndex = 5
       OnExecute = acTaskEditExecute
       OnUpdate = acTaskToolbarUpdate
@@ -821,6 +825,7 @@ object fmMain: TfmMain
       Category = 'Tasks'
       Caption = 'acTaskPost'
       DisableIfNoHandler = False
+      Hint = 'Save changes to selected task'
       ImageIndex = 6
       OnExecute = acTaskPostExecute
       OnUpdate = acTaskToolbarUpdate
@@ -829,6 +834,7 @@ object fmMain: TfmMain
       Category = 'Tasks'
       Caption = 'acTaskCancel'
       DisableIfNoHandler = False
+      Hint = 'Cancel changes to selected task'
       ImageIndex = 7
       OnExecute = acTaskCancelExecute
       OnUpdate = acTaskToolbarUpdate
@@ -837,6 +843,7 @@ object fmMain: TfmMain
       Category = 'Tasks'
       Caption = 'acTaskRefresh'
       DisableIfNoHandler = False
+      Hint = 'Refresh tasks for selected chain'
       ImageIndex = 8
       OnExecute = acTaskRefreshExecute
       OnUpdate = acTaskToolbarUpdate
@@ -845,6 +852,7 @@ object fmMain: TfmMain
       Category = 'Chains'
       Caption = 'acChainAdd'
       DisableIfNoHandler = False
+      Hint = 'Add new chain'
       ImageIndex = 3
       OnExecute = acChainAddExecute
       OnUpdate = acChainToolbarUpdate
@@ -852,6 +860,7 @@ object fmMain: TfmMain
     object acChainDelete: TAction
       Category = 'Chains'
       Caption = 'acChainDelete'
+      Hint = 'Delete selected chain'
       ImageIndex = 4
       OnExecute = acChainDeleteExecute
       OnUpdate = acChainToolbarUpdate
@@ -859,6 +868,7 @@ object fmMain: TfmMain
     object acChainEdit: TAction
       Category = 'Chains'
       Caption = 'acChainEdit'
+      Hint = 'Edit selected chain'
       ImageIndex = 5
       OnExecute = acChainEditExecute
       OnUpdate = acChainToolbarUpdate
@@ -866,6 +876,7 @@ object fmMain: TfmMain
     object acChainPost: TAction
       Category = 'Chains'
       Caption = 'acChainPost'
+      Hint = 'Save changes in selected chain'
       ImageIndex = 6
       OnExecute = acChainPostExecute
       OnUpdate = acChainToolbarUpdate
@@ -873,6 +884,7 @@ object fmMain: TfmMain
     object acChainCancel: TAction
       Category = 'Chains'
       Caption = 'acChainCancel'
+      Hint = 'Cancel changes in selected chain'
       ImageIndex = 7
       OnExecute = acChainCancelExecute
       OnUpdate = acChainToolbarUpdate
@@ -880,6 +892,7 @@ object fmMain: TfmMain
     object acChainRefresh: TAction
       Category = 'Chains'
       Caption = 'acChainRefresh'
+      Hint = 'Refresh chain list from database'
       ImageIndex = 8
       OnExecute = acChainRefreshExecute
       OnUpdate = acChainToolbarUpdate
