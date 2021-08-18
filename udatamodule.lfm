@@ -32,7 +32,7 @@ object dmPgEngine: TdmPgEngine
     AfterClose = qryChainsAfterClose
     AfterDelete = qryChainsAfterDelete
     AfterInsert = qryChainsAfterInsert
-    AfterPost = qryChainsAfterPost
+    AfterPost = qryAfterPost
     BeforeDelete = qryChainsBeforeDelete
     Database = PQConn
     Transaction = transChains
@@ -114,6 +114,11 @@ object dmPgEngine: TdmPgEngine
     IndexName = 'DEFAULT_ORDER'
     MaxIndexesCount = 4
     FieldDefs = <>
+    AfterInsert = qryTasksAfterInsert
+    AfterOpen = qryTasksAfterOpen
+    AfterPost = qryAfterPost
+    AfterRefresh = qryTasksAfterOpen
+    BeforePost = qryTasksBeforePost
     Database = PQConn
     Transaction = transChains
     SQL.Strings = (
@@ -160,11 +165,23 @@ object dmPgEngine: TdmPgEngine
       '    x'
     )
     InsertSQL.Strings = (
-      'INSERT INTO timetable.task'
-      '(parent_id, task_name, kind, command, run_as, database_connection, ignore_error, autonomous, timeout)'
-      'VALUES'
-      '(0, '''',''SQL'', '''', '''', '''', false, false, 0)'
-      ''
+      'INSERT INTO timetable.task('
+      '    parent_id,'
+      '    command,'
+      '    kind,'
+      '    run_as,'
+      '    ignore_error,'
+      '    autonomous,'
+      '    database_connection'
+      ') VALUES ('
+      '    :"parent_id",'
+      '    :"command",'
+      '    :"kind",'
+      '    :"run_as",'
+      '    :"ignore_error",'
+      '    :"autonomous",'
+      '    :"connect_string"'
+      ')'
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit, sqoRefreshUsingSelect]
     Params = <    

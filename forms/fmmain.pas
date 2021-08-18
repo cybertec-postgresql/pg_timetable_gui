@@ -86,6 +86,8 @@ type
     procedure gridChainsTitleClick(Column: TColumn);
     procedure gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: integer; Column: TColumn; State: TGridDrawState);
+    procedure gridTasksSelectEditor(Sender: TObject; Column: TColumn;
+      var Editor: TWinControl);
     procedure miCloseClick(Sender: TObject);
   private
     FLastColumn: TColumn; //last sorted grid column
@@ -195,6 +197,17 @@ begin
   imglGrids.Draw(gridTasks.Canvas, aLeft, aTop, ImgIdx);
 end;
 
+procedure TfmMain.gridTasksSelectEditor(Sender: TObject; Column: TColumn;
+  var Editor: TWinControl);
+begin
+  if Column.FieldName = 'kind' then
+    with Editor as TCustomComboBox do
+    begin
+      Style := csDropDownList;
+      AutoDropDown := True;
+    end;
+end;
+
 procedure TfmMain.miCloseClick(Sender: TObject);
 begin
   Close();
@@ -288,8 +301,8 @@ var
 begin
   CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
   acTaskAdd.Enabled := CanModify;
-  acMoveTaskUp.Enabled := CanModify and not dmPgEngine.qryTasks.BOF;
-  acMoveTaskDown.Enabled := CanModify and not dmPgEngine.qryTasks.EOF;
+  acMoveTaskUp.Enabled := CanModify and (dmPgEngine.qryTasks.RecNo > 1);
+  acMoveTaskDown.Enabled := CanModify and (dmPgEngine.qryTasks.RecNo < dmPgEngine.qryTasks.RecordCount);
   acTaskDelete.Enabled := CanModify and
     (not (dmPgEngine.qryTasks.BOF and dmPgEngine.qryTasks.EOF));
   acTaskEdit.Enabled := CanModify and not (dmPgEngine.qryTasks.State in dsEditModes);

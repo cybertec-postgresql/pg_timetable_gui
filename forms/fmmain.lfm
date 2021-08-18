@@ -105,6 +105,7 @@ object fmMain: TfmMain
       ShowHint = True
       TabOrder = 0
       OnDrawColumnCell = gridTasksDrawColumnCell
+      OnSelectEditor = gridTasksSelectEditor
     end
     object splitDetails: TSplitter
       Cursor = crVSplit
