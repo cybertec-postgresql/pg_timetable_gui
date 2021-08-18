@@ -24,9 +24,13 @@ type
     procedure qryChainsAfterClose(DataSet: TDataSet);
     procedure qryChainsAfterDelete(DataSet: TDataSet);
     procedure qryChainsAfterInsert(DataSet: TDataSet);
-    procedure qryChainsAfterPost(DataSet: TDataSet);
+    procedure qryAfterPost(DataSet: TDataSet);
     procedure qryChainsBeforeDelete(DataSet: TDataSet);
+    procedure qryTasksAfterInsert(DataSet: TDataSet);
+    procedure qryTasksAfterOpen(DataSet: TDataSet);
+    procedure qryTasksBeforePost(DataSet: TDataSet);
   private
+    FLastTaskID: integer;
   public
     procedure Connect;
     procedure Disconnect;
@@ -80,14 +84,18 @@ begin
   end;
 end;
 
-procedure TdmPgEngine.qryChainsAfterPost(DataSet: TDataSet);
+procedure TdmPgEngine.qryAfterPost(DataSet: TDataSet);
 var
-  c: variant;
+  FldVal: variant;
+  FldName: string;
   Q: TSQLQuery;
+const
+  FldNames: array[boolean] of string = ('chain_name', 'parent_id');
 begin
   Q := DataSet as TSQLQuery;
+  FldName := FldNames[Q = qryTasks];
   Q.IndexName := '';
-  c := DataSet.FieldValues['chain_name'];
+  FldVal := DataSet.FieldValues[FldName];
   try
     Q.ApplyUpdates;
     DataSet.Refresh;
@@ -98,15 +106,38 @@ begin
       Q.CancelUpdates;
      end;
   end;
-  DataSet.Locate('chain_name', c, []);
-  fmMain.MainForm.UpdateSortIndication(nil);
+  DataSet.Locate(FldName, FldVal, []);
+  if Q = qryChains then
+    fmMain.MainForm.UpdateSortIndication(nil);
 end;
 
 procedure TdmPgEngine.qryChainsBeforeDelete(DataSet: TDataSet);
 begin
   if MessageDlg('Delete confirmation',
     'Are you sure you want delete current chain?', mtWarning, [mbOK, mbCancel], 0) = mrCancel then
-  Abort;
+  Abort();
+end;
+
+procedure TdmPgEngine.qryTasksAfterInsert(DataSet: TDataSet);
+begin
+  with DataSet do
+  begin
+    FieldByName('parent_id').AsInteger := FLastTaskID;
+    FieldByName('kind').AsString := 'SQL';
+    FieldByName('ignore_error').AsBoolean := False;
+    FieldByName('autonomous').AsBoolean := False;
+  end;
+end;
+
+procedure TdmPgEngine.qryTasksAfterOpen(DataSet: TDataSet);
+begin
+  DataSet.Last();
+  FLastTaskID := DataSet.FieldByName('task_id').AsInteger;
+end;
+
+procedure TdmPgEngine.qryTasksBeforePost(DataSet: TDataSet);
+begin
+  if DataSet.FieldByName('command').IsNull then Abort();
 end;
 
 procedure TdmPgEngine.Connect;
