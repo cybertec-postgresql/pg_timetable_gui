@@ -784,6 +784,7 @@ object fmMain: TfmMain
       DisableIfNoHandler = False
       Hint = 'Move selected task up'
       ImageIndex = 2
+      OnExecute = acMoveTaskUpExecute
       OnUpdate = acTaskToolbarUpdate
     end
     object acMoveTaskDown: TAction
@@ -792,6 +793,7 @@ object fmMain: TfmMain
       DisableIfNoHandler = False
       Hint = 'Move selected task down'
       ImageIndex = 1
+      OnExecute = acMoveTaskDownExecute
       OnUpdate = acTaskToolbarUpdate
     end
     object acTaskDelete: TAction

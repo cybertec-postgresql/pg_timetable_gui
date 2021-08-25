@@ -73,6 +73,8 @@ type
     procedure acChainPostExecute(Sender: TObject);
     procedure acChainRefreshExecute(Sender: TObject);
     procedure acChainToolbarUpdate(Sender: TObject);
+    procedure acMoveTaskDownExecute(Sender: TObject);
+    procedure acMoveTaskUpExecute(Sender: TObject);
     procedure acTaskAddExecute(Sender: TObject);
     procedure acTaskCancelExecute(Sender: TObject);
     procedure acTaskDeleteExecute(Sender: TObject);
@@ -233,6 +235,40 @@ begin
   acChainPost.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
   acChainCancel.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
   acChainRefresh.Enabled := CanModify;
+end;
+
+procedure TfmMain.acMoveTaskDownExecute(Sender: TObject);
+var idx: integer;
+begin
+  with dmPgEngine do
+  begin
+    gridTasks.BeginUpdate;
+    try
+      idx := qryTasks.RecNo;
+      MoveTaskDown(qryTasks.FieldByName('task_id').AsInteger);
+      qryTasks.Refresh;
+      qryTasks.RecNo := idx + 1;
+    finally
+      gridTasks.EndUpdate();
+    end;
+  end;
+end;
+
+procedure TfmMain.acMoveTaskUpExecute(Sender: TObject);
+var idx: integer;
+begin
+  with dmPgEngine do
+  begin
+    gridTasks.BeginUpdate;
+    try
+      idx := qryTasks.RecNo;
+      MoveTaskUp(qryTasks.FieldByName('task_id').AsInteger);
+      qryTasks.Refresh;
+      qryTasks.RecNo := idx - 1;
+    finally
+      gridTasks.EndUpdate();
+    end;
+  end;
 end;
 
 procedure TfmMain.acChainAddExecute(Sender: TObject);

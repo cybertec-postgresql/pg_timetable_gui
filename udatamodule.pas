@@ -37,6 +37,8 @@ type
     function IsCronValueValid(const S: string): boolean;
     function IsConnected: boolean;
     function SelectSQL(const sql: string): string;
+    procedure MoveTaskUp(const ATaskID: integer);
+    procedure MoveTaskDown(const ATaskID: integer);
   end;
 
 var
@@ -203,6 +205,16 @@ begin
   finally
     FreeAndNil(Q);
   end;
+end;
+
+procedure TdmPgEngine.MoveTaskUp(const ATaskID: integer);
+begin
+  PQConn.ExecuteDirect(Format('SELECT timetable.move_task_up(%d)', [ATaskID]));
+end;
+
+procedure TdmPgEngine.MoveTaskDown(const ATaskID: integer);
+begin
+  PQConn.ExecuteDirect(Format('SELECT timetable.move_task_down(%d)', [ATaskID]));
 end;
 
 end.
