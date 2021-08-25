@@ -183,6 +183,24 @@ object dmPgEngine: TdmPgEngine
       '    :"connect_string"'
       ')'
     )
+    UpdateSQL.Strings = (
+      'UPDATE timetable.task SET ('
+      '    command,'
+      '    kind,'
+      '    run_as,'
+      '    ignore_error,'
+      '    autonomous,'
+      '    database_connection'
+      '  ) = ('
+      '    :"command",'
+      '    :"kind",'
+      '    :"run_as",'
+      '    :"ignore_error",'
+      '    :"autonomous",'
+      '    :"connect_string"'
+      '  )'
+      'WHERE task_id = :"task_id"'
+    )
     Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit, sqoRefreshUsingSelect]
     Params = <    
       item
@@ -192,7 +210,6 @@ object dmPgEngine: TdmPgEngine
         Size = 8
       end>
     ParseSQL = False
-    UpdateMode = upWhereAll
     DataSource = dsChains
     Left = 192
     Top = 177
