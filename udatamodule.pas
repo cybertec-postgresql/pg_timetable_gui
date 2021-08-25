@@ -39,6 +39,7 @@ type
     function SelectSQL(const sql: string): string;
     procedure MoveTaskUp(const ATaskID: integer);
     procedure MoveTaskDown(const ATaskID: integer);
+    function IsTaskDeleteAllowed: boolean;
   end;
 
 var
@@ -215,6 +216,11 @@ end;
 procedure TdmPgEngine.MoveTaskDown(const ATaskID: integer);
 begin
   PQConn.ExecuteDirect(Format('SELECT timetable.move_task_down(%d)', [ATaskID]));
+end;
+
+function TdmPgEngine.IsTaskDeleteAllowed: boolean;
+begin
+  Result := not qryTasks.BOF and not qryTasks.EOF and not qryTasks.FieldByName('parent_id').IsNull;
 end;
 
 end.

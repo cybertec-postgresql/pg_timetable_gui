@@ -339,8 +339,7 @@ begin
   acTaskAdd.Enabled := CanModify;
   acMoveTaskUp.Enabled := CanModify and (dmPgEngine.qryTasks.RecNo > 1);
   acMoveTaskDown.Enabled := CanModify and (dmPgEngine.qryTasks.RecNo < dmPgEngine.qryTasks.RecordCount);
-  acTaskDelete.Enabled := CanModify and
-    (not (dmPgEngine.qryTasks.BOF and dmPgEngine.qryTasks.EOF));
+  acTaskDelete.Enabled := CanModify and dmPgEngine.IsTaskDeleteAllowed();
   acTaskEdit.Enabled := CanModify and not (dmPgEngine.qryTasks.State in dsEditModes);
   acTaskPost.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
   acTaskCancel.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
