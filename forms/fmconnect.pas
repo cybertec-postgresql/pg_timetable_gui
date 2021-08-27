@@ -1,6 +1,6 @@
 unit fmConnect;
 
-{$MODE Delphi}
+{$mode objfpc}{$H+}
 
 interface
 
@@ -38,9 +38,6 @@ type
   end;
 
 function EditDatabase(ADatabase: TPQConnection): boolean;
-
-var
-  fmConnect: TfmConnect;
 
 implementation
 

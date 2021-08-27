@@ -103,18 +103,21 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <RequiredPackages Count="3">
+    <RequiredPackages Count="4">
       <Item1>
-        <PackageName Value="LazControls"/>
+        <PackageName Value="SynEdit"/>
       </Item1>
       <Item2>
-        <PackageName Value="FCL"/>
+        <PackageName Value="LazControls"/>
       </Item2>
       <Item3>
-        <PackageName Value="LCL"/>
+        <PackageName Value="FCL"/>
       </Item3>
+      <Item4>
+        <PackageName Value="LCL"/>
+      </Item4>
     </RequiredPackages>
-    <Units Count="8">
+    <Units Count="9">
       <Unit0>
         <Filename Value="pg_timetable_gui.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -160,6 +163,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmConnect"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="forms\fmlog.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fmLog"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmLog"/>
+      </Unit8>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

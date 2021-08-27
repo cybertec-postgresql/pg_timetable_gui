@@ -20,7 +20,7 @@ object dmPgEngine: TdmPgEngine
     Transaction = transChains
     UserName = 'scheduler'
     OnLog = PQConnLog
-    LogEvents = [detParamValue, detActualSQL]
+    LogEvents = [detPrepare, detExecute, detCommit, detParamValue, detActualSQL]
     Left = 105
     Top = 312
   end

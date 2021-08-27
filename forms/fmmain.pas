@@ -35,8 +35,9 @@ type
     imglToolbarsDisabled: TImageList;
     imglToolbars: TImageList;
     imglGrids: TImageList;
+    miLog: TMenuItem;
+    miView: TMenuItem;
     miConnect: TMenuItem;
-    mmLog: TMemo;
     menuMain: TMainMenu;
     miFile: TMenuItem;
     miClose: TMenuItem;
@@ -46,7 +47,6 @@ type
     pnlChains: TPanel;
     pnlDetails: TPanel;
     splitChain: TSplitter;
-    splitDetails: TSplitter;
     toolbarChains: TToolBar;
     toolbarMain: TToolBar;
     btnConnect: TToolButton;
@@ -90,6 +90,7 @@ type
     procedure gridTasksSelectEditor(Sender: TObject; Column: TColumn;
       var Editor: TWinControl);
     procedure miCloseClick(Sender: TObject);
+    procedure miLogClick(Sender: TObject);
   private
     FLastColumn: TColumn; //last sorted grid column
   public
@@ -101,7 +102,7 @@ var
 
 implementation
 
-uses uDataModule, SQLDB, LCLType, RegExpr;
+uses uDataModule, SQLDB, LCLType, RegExpr, fmLog;
 
 {$R *.lfm}
 
@@ -212,6 +213,11 @@ end;
 procedure TfmMain.miCloseClick(Sender: TObject);
 begin
   Close();
+end;
+
+procedure TfmMain.miLogClick(Sender: TObject);
+begin
+  fmLog.LogForm.Visible := not fmLog.LogForm.Visible;
 end;
 
 procedure TfmMain.UpdateSortIndication(ACol: TColumn);
@@ -352,7 +358,7 @@ begin
       dmPgEngine.Connect;
     except
       on EAbort do
-        mmLog.Lines.Append('Connection cancelled by the user');
+        fmLog.LogForm.mmLog.Lines.Append('Connection cancelled by the user');
       on E: Exception do
         MessageDlg('PostgreSQL Error', E.Message, mtError, [mbOK], 0);
     end

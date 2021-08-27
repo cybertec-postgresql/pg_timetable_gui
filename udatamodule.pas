@@ -47,7 +47,7 @@ var
 
 implementation
 
-uses uObjects, fmMain, fmConnect, Dialogs, UITypes;
+uses uObjects, fmMain, fmConnect, Dialogs, UITypes, fmLog;
 
 {$R *.lfm}
 
@@ -55,9 +55,13 @@ uses uObjects, fmMain, fmConnect, Dialogs, UITypes;
 
 procedure TdmPgEngine.PQConnLog(Sender: TSQLConnection;
   EventType: TDBEventType; const Msg: String);
+const et: array[TDBEventType] of string = ('detCustom', 'detPrepare', 'detExecute',
+'detFetch', 'detCommit', 'detRollBack', 'detParamValue', 'detActualSQL');
 begin
-  fmMain.MainForm.mmLog.Lines.Append(Msg);
-  fmMain.MainForm.mmLog.Lines.Append('----------------------------------------------------');
+  with fmLog.LogForm.mmLog.Lines do
+  begin
+    Append(Format('[%s:] %s' + LineEnding, [et[EventType], Msg]))
+  end;
 end;
 
 procedure TdmPgEngine.PQConnLogin(Sender: TObject; Username, Password: string);

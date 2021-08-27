@@ -8,7 +8,7 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads} cthreads, {$ENDIF} {$ENDIF}
   lazcontrols,
   fmMain, fmConnect,
   uDataModule,
-  uObjects;
+  uObjects, fmLog;
 
 {$R *.res}
 
@@ -18,5 +18,6 @@ begin
   Application.Initialize;
   Application.CreateForm(TfmMain, MainForm);
   Application.CreateForm(TdmPgEngine, dmPgEngine);
+  Application.CreateForm(TfmLog, LogForm);
   Application.Run;
 end.

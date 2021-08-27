@@ -23,7 +23,7 @@ object fmMain: TfmMain
     TabOrder = 1
     object gridTasks: TDBGrid
       Left = 2
-      Height = 222
+      Height = 531
       Top = 42
       Width = 1508
       Align = alClient
@@ -107,25 +107,6 @@ object fmMain: TfmMain
       OnDrawColumnCell = gridTasksDrawColumnCell
       OnSelectEditor = gridTasksSelectEditor
     end
-    object splitDetails: TSplitter
-      Cursor = crVSplit
-      Left = 2
-      Height = 9
-      Top = 264
-      Width = 1508
-      Align = alBottom
-      ResizeAnchor = akBottom
-    end
-    object mmLog: TMemo
-      Left = 2
-      Height = 300
-      Top = 273
-      Width = 1508
-      Align = alBottom
-      ParentFont = False
-      ScrollBars = ssAutoVertical
-      TabOrder = 2
-    end
     object toolbarTasks: TToolBar
       Left = 2
       Height = 40
@@ -139,7 +120,7 @@ object fmMain: TfmMain
       Images = imglToolbars
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 3
+      TabOrder = 1
       object btnTaskMoveUp: TToolButton
         Left = 1
         Top = 0
@@ -756,6 +737,14 @@ object fmMain: TfmMain
       object miClose: TMenuItem
         Caption = 'Close'
         OnClick = miCloseClick
+      end
+    end
+    object miView: TMenuItem
+      Caption = 'View'
+      object miLog: TMenuItem
+        AutoCheck = True
+        Caption = 'Log'
+        OnClick = miLogClick
       end
     end
     object miHelp: TMenuItem
