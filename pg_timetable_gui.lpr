@@ -6,7 +6,6 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads} cthreads, {$ENDIF} {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms,
   lazcontrols,
-  runtimetypeinfocontrols,
   fmMain, fmConnect,
   uDataModule,
   uObjects;

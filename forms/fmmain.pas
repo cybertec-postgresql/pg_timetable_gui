@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
-  StdCtrls, DBGrids, DBCtrls, ExtCtrls, RTTIGrids, RTTICtrls, uObjects,
-  PropEdits, ObjectInspector, VirtualTrees, DB, Grids, ActnList, Buttons;
+  StdCtrls, DBGrids, DBCtrls, ExtCtrls, uObjects, DB, Grids, ActnList, Buttons;
 
 type
 
