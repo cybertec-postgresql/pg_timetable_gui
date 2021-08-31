@@ -14,13 +14,13 @@ type
   TdmPgEngine = class(TDataModule)
     dsTasks: TDataSource;
     dsChains: TDataSource;
-    PQConn: TPQConnection;
+    connMain: TPQConnection;
     qryChains: TSQLQuery;
     qryTasks: TSQLQuery;
     transChains: TSQLTransaction;
-    procedure PQConnLog(Sender: TSQLConnection; EventType: TDBEventType;
+    procedure connMainLog(Sender: TSQLConnection; EventType: TDBEventType;
       const Msg: String);
-    procedure PQConnLogin(Sender: TObject; Username, Password: string);
+    procedure connMainLogin(Sender: TObject; Username, Password: string);
     procedure qryChainsAfterClose(DataSet: TDataSet);
     procedure qryChainsAfterDelete(DataSet: TDataSet);
     procedure qryChainsAfterInsert(DataSet: TDataSet);
@@ -53,7 +53,7 @@ uses uObjects, fmMain, fmConnect, Dialogs, UITypes, fmLog;
 
 { TdmPgEngine }
 
-procedure TdmPgEngine.PQConnLog(Sender: TSQLConnection;
+procedure TdmPgEngine.connMainLog(Sender: TSQLConnection;
   EventType: TDBEventType; const Msg: String);
 const et: array[TDBEventType] of string = ('detCustom', 'detPrepare', 'detExecute',
 'detFetch', 'detCommit', 'detRollBack', 'detParamValue', 'detActualSQL');
@@ -64,7 +64,7 @@ begin
   end;
 end;
 
-procedure TdmPgEngine.PQConnLogin(Sender: TObject; Username, Password: string);
+procedure TdmPgEngine.connMainLogin(Sender: TObject; Username, Password: string);
 begin
   if not fmConnect.EditDatabase(Sender as TPQConnection) then Abort();
 end;
@@ -156,7 +156,7 @@ end;
 
 procedure TdmPgEngine.Disconnect;
 begin
-  PQConn.Close(True);
+  connMain.Close(True);
 end;
 
 function TdmPgEngine.IsCronValueValid(const S: string): boolean;
@@ -166,8 +166,8 @@ begin
   Result := True;
   Q := TSQLQuery.Create(nil);
   try
-    Q.DataBase := PQConn;
-    Q.Transaction := PQConn.Transaction;
+    Q.DataBase := connMain;
+    Q.Transaction := connMain.Transaction;
     Q.SQL.Text := 'SELECT CAST(:cron AS timetable.cron)';
     Q.ParamByName('cron').AsString := S;
     try
@@ -193,8 +193,8 @@ begin
   Result := '';
   Q := TSQLQuery.Create(nil);
   try
-    Q.DataBase := PQConn;
-    Q.Transaction := PQConn.Transaction;
+    Q.DataBase := connMain;
+    Q.Transaction := connMain.Transaction;
     Q.SQL.Text := sql;
     try
       Q.Open;
@@ -214,12 +214,12 @@ end;
 
 procedure TdmPgEngine.MoveTaskUp(const ATaskID: integer);
 begin
-  PQConn.ExecuteDirect(Format('SELECT timetable.move_task_up(%d)', [ATaskID]));
+  connMain.ExecuteDirect(Format('SELECT timetable.move_task_up(%d)', [ATaskID]));
 end;
 
 procedure TdmPgEngine.MoveTaskDown(const ATaskID: integer);
 begin
-  PQConn.ExecuteDirect(Format('SELECT timetable.move_task_down(%d)', [ATaskID]));
+  connMain.ExecuteDirect(Format('SELECT timetable.move_task_down(%d)', [ATaskID]));
 end;
 
 function TdmPgEngine.IsTaskDeleteAllowed: boolean;
