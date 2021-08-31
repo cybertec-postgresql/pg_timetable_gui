@@ -1,3 +1,9 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![build-test](https://github.com/cybertec-postgresql/pg_timetable_gui/actions/workflows/build.yml/badge.svg)](https://github.com/cybertec-postgresql/pg_timetable_gui/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/cybertec-postgresql/pg_timetable_gui?include_prereleases)](https://github.com/cybertec-postgresql/pg_timetable_gui/releases)
+[![Github All Releases](https://img.shields.io/github/downloads/cybertec-postgresql/pg_timetable_gui/total?style=flat-square)](https://github.com/cybertec-postgresql/pg_timetable_gui/releases)
+
+
 # pg_timetable_gui: IDE for [pg_timetable](https://github.com/cybertec-postgresql/pg_timetable) scheduler
 
 **pg_timetable_gui** is a free cross-platform tool for developers and administrators, who need to work with advanced PostgreSQL [pg_timetable](https://github.com/cybertec-postgresql/pg_timetable) scheduler. While every operation can be done in a preferred PostgreSQL client (e.g. psql, pgadmin, dbeaber) we found that special tool may increase productivity during creating, debugging and monitoring jobs.
