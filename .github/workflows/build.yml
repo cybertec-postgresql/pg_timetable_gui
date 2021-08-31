@@ -13,14 +13,18 @@ jobs:
 
     strategy:
       matrix:
-        operating-system: [ubuntu-latest,windows-latest,macos-latest]
+        kind: ['linux', 'windows', 'macOS']
         include:
-          - operating-system: ubuntu-latest
+          - kind: linux
+            operating-system: ubuntu-latest
             target: linux-x64
-          - operating-system: windows-latest
+          - kind: windows
+            operating-system: windows-latest
             target: win-x64
-          - operating-system: windows-latest
-            target: osx-x64        
+          - kind: macOS
+            operating-system: windows-latest
+            target: osx-x64
+    
         lazarus-versions: [stable] # [dist, stable, 2.0.10, 2.0.6, 1.6.4, 1.6.2, 1.4.4, 1.2]
 
     steps:
