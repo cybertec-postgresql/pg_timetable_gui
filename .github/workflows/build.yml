@@ -67,26 +67,15 @@ jobs:
           pg_timetable_gui.exe 
           pg_timetable_gui
 
-    - name: Upload Release Artifacts
+    - name: Publish Daily Build
       uses: softprops/action-gh-release@v1
-      if: "startsWith(github.ref, 'refs/tags/')"
+      # if: "startsWith(github.ref, 'refs/tags/')"
       with:
-        files: |
-          pg_timetable_gui_Win_x64.zip
-          pg_timetable_gui_Linux_x64.zip
-          pg_timetable_gui_MacOSX_x64.zip
-          LICENSE
-
-    - name: Publish
-      uses: softprops/action-gh-release@v1
-      with:
-          tag_name: 3.0.x
+          tag_name: daily_builds
           files: |
             *.zip
             *.tar.gz
+            LICENSE
           prerelease: true
-          body: |
-            Note: These are daily builds. Attachments are automatically created and replaced on every new commit. Regardless of what the message above says.
-            Last build based on ${{ steps.vars.outputs.sha_short }}
       # env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
