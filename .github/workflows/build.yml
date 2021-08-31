@@ -3,6 +3,9 @@ name: build-test
 on:
   pull_request:
   workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"    
 
 jobs:
   build:
