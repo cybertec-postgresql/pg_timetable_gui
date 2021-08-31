@@ -33,13 +33,13 @@ jobs:
         lazarus-version: ${{ matrix.lazarus-versions }}
         # include-packages: "Synapse 40.1"
 
-    - name: Build the Main Application
+    - name: Build the application
       if: ${{ matrix.operating-system != 'macos-latest' }}
       run: |
         lazbuild -B "pg_timetable_gui.lpi"
         ls
 
-    - name: Build the Main Application (macOS)
+    - name: Build the application (macOS)
       if: ${{ matrix.operating-system == 'macos-latest' }}
       run: lazbuild -B --ws=cocoa "pg_timetable_gui.lpi"
 
@@ -55,7 +55,7 @@ jobs:
             tar czvf "${release_name}.tar.gz" "pg_timetable_gui"
           fi
     
-    - name: Publish Daily Build
+    - name: Publish Release Artifacts
       uses: softprops/action-gh-release@v1
       with:
           files: |
