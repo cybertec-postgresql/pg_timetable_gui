@@ -7,11 +7,19 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.operating-system }}
+
     strategy:
       matrix:
         operating-system: [ubuntu-latest,windows-latest,macos-latest]
-#        lazarus-versions: [dist, stable, 2.0.10, 2.0.6, 1.6.4, 1.6.2, 1.4.4, 1.2]
-        lazarus-versions: [stable]
+        include:
+          - operating-system: ubuntu-latest
+            target: linux-x64
+          - operating-system: windows-latest
+            target: win-x64
+          - operating-system: windows-latest
+            target: osx-x64        
+        lazarus-versions: [stable] # [dist, stable, 2.0.10, 2.0.6, 1.6.4, 1.6.2, 1.4.4, 1.2]
+
     steps:
     - uses: actions/checkout@v2
     - name: Install Lazarus
@@ -28,7 +36,20 @@ jobs:
       if: ${{ matrix.operating-system == 'macos-latest' }}
       run: lazbuild -B --ws=cocoa "pg_timetable_gui.lpi"
 
-    - uses: actions/upload-artifact@v2
+    - name: Pack
+      shell: bash
+      run: |
+          release_name="pg_timetable_gui-${{ matrix.target }}"
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            # Pack to zip for Windows
+            7z a -tzip "${release_name}.zip" "./pg_timetable_gui*"
+          else
+            tar czvf "${release_name}.tar.gz" "pg_timetable_gui*"
+          fi
+    
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      if: "!startsWith(github.ref, 'refs/tags/')"
       with:
         name: pg_timetable_gui for ${{ matrix.operating-system }}
         retention-days: 3
@@ -36,8 +57,26 @@ jobs:
           pg_timetable_gui.exe 
           pg_timetable_gui
 
-    # - name: Build the Unit Tests Application
-    #   run: lazbuild -B "tests/testconsoleapplication.lpi"
+    - name: Upload Release Artifacts
+      uses: softprops/action-gh-release@v1
+      if: "startsWith(github.ref, 'refs/tags/')"
+      with:
+        files: |
+          pg_timetable_gui_Win_x64.zip
+          pg_timetable_gui_Linux_x64.zip
+          pg_timetable_gui_MacOSX_x64.zip
+          LICENSE
 
-    # - name: Run the Unit Tests Application
-    #   run: bin/testconsoleapplication "--all" "--format=plain"
+    - name: Publish
+      uses: softprops/action-gh-release@v1
+      with:
+          tag_name: 3.0.x
+          files: |
+            *.zip
+            *.tar.gz
+          prerelease: true
+          body: |
+            Note: These are daily builds. Attachments are automatically created and replaced on every new commit. Regardless of what the message above says.
+            Last build based on ${{ steps.vars.outputs.sha_short }}
+      # env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
