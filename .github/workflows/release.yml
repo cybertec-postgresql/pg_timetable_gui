@@ -1,0 +1,64 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"    
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+
+    strategy:
+      matrix:
+        kind: ['linux', 'windows', 'macOS']
+        include:
+          - kind: linux
+            operating-system: ubuntu-latest
+            target: linux-x64
+          - kind: windows
+            operating-system: windows-latest
+            target: win-x64
+          - kind: macOS
+            operating-system: windows-latest
+            target: osx-x64
+    
+        lazarus-versions: [stable] # [dist, stable, 2.0.10, 2.0.6, 1.6.4, 1.6.2, 1.4.4, 1.2]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Lazarus
+      uses: gcarreno/setup-lazarus@v3.0.2
+      with:
+        lazarus-version: ${{ matrix.lazarus-versions }}
+        # include-packages: "Synapse 40.1"
+
+    - name: Build the Main Application
+      if: ${{ matrix.operating-system != 'macos-latest' }}
+      run: |
+        lazbuild -B "pg_timetable_gui.lpi"
+        ls
+
+    - name: Build the Main Application (macOS)
+      if: ${{ matrix.operating-system == 'macos-latest' }}
+      run: lazbuild -B --ws=cocoa "pg_timetable_gui.lpi"
+
+    - name: Pack
+      shell: bash
+      run: |
+          release_name="pg_timetable_gui-${{ matrix.target }}"
+          ls -a
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            # Pack to zip for Windows
+            7z a -tzip "${release_name}.zip" "pg_timetable_gui.exe"
+          else
+            tar czvf "${release_name}.tar.gz" "pg_timetable_gui"
+          fi
+    
+    - name: Publish Daily Build
+      uses: softprops/action-gh-release@v1
+      with:
+          files: |
+            *.zip
+            *.tar.gz
+            LICENSE
