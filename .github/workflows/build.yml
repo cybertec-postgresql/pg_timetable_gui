@@ -4,8 +4,8 @@ on:
   pull_request:
   workflow_dispatch:
   push:
-    tags:
-      - "v*.*.*"    
+    # tags:
+    #   - "v*.*.*"    
 
 jobs:
   build:
@@ -47,6 +47,7 @@ jobs:
       shell: bash
       run: |
           release_name="pg_timetable_gui-${{ matrix.target }}"
+          ls -a
           if [ "${{ matrix.target }}" == "win-x64" ]; then
             # Pack to zip for Windows
             7z a -tzip "${release_name}.zip" "./pg_timetable_gui*"
