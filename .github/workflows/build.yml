@@ -38,8 +38,8 @@ jobs:
     - name: Build the Main Application
       if: ${{ matrix.operating-system != 'macos-latest' }}
       run: |
-        ls
         lazbuild -B "pg_timetable_gui.lpi"
+        ls
 
     - name: Build the Main Application (macOS)
       if: ${{ matrix.operating-system == 'macos-latest' }}
@@ -52,9 +52,9 @@ jobs:
           ls -a
           if [ "${{ matrix.target }}" == "win-x64" ]; then
             # Pack to zip for Windows
-            7z a -tzip "${release_name}.zip" "./pg_timetable_gui*"
+            7z a -tzip "${release_name}.zip" "pg_timetable_gui.exe"
           else
-            tar czvf "${release_name}.tar.gz" "pg_timetable_gui*"
+            tar czvf "${release_name}.tar.gz" "pg_timetable_gui"
           fi
     
     - name: Upload Build Artifacts
