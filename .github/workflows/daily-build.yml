@@ -1,11 +1,13 @@
-name: build-test
+name: daily-build
 
 on:
-  pull_request:
   workflow_dispatch:
+  push:
+    branches:
+      - main 
 
 jobs:
-  build:
+  daily_build:
     runs-on: ${{ matrix.operating-system }}
 
     strategy:
@@ -42,11 +44,24 @@ jobs:
       if: ${{ matrix.operating-system == 'macos-latest' }}
       run: lazbuild -B --ws=cocoa "pg_timetable_gui.lpi"
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v2
+    - name: Pack
+      shell: bash
+      run: |
+          release_name="pg_timetable_gui-${{ matrix.target }}"
+          ls -a
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            # Pack to zip for Windows
+            7z a -tzip "${release_name}.zip" "pg_timetable_gui.exe"
+          else
+            tar czvf "${release_name}.tar.gz" "pg_timetable_gui"
+          fi
+    
+    - name: Publish the daily build
+      uses: softprops/action-gh-release@v1
       with:
-        name: pg_timetable_gui for ${{ matrix.operating-system }}
-        retention-days: 3
-        path: |
-          pg_timetable_gui.exe 
-          pg_timetable_gui
+          tag_name: daily_builds
+          files: |
+            *.zip
+            *.tar.gz
+            LICENSE
+          prerelease: true

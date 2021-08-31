@@ -1,8 +1,8 @@
 object dmPgEngine: TdmPgEngine
   OldCreateOrder = False
   Height = 524
-  HorizontalOffset = 2019
-  VerticalOffset = 712
+  HorizontalOffset = 1284
+  VerticalOffset = 619
   Width = 668
   PPI = 144
   object dsChains: TDataSource
@@ -10,16 +10,16 @@ object dmPgEngine: TdmPgEngine
     Left = 108
     Top = 48
   end
-  object PQConn: TPQConnection
+  object connMain: TPQConnection
     Connected = False
     LoginPrompt = True
-    OnLogin = PQConnLogin
+    OnLogin = connMainLogin
     DatabaseName = 'timetable'
     KeepConnection = False
     Password = 'somestrong'
     Transaction = transChains
     UserName = 'scheduler'
-    OnLog = PQConnLog
+    OnLog = connMainLog
     LogEvents = [detPrepare, detExecute, detCommit, detParamValue, detActualSQL]
     Left = 105
     Top = 312
@@ -34,7 +34,7 @@ object dmPgEngine: TdmPgEngine
     AfterInsert = qryChainsAfterInsert
     AfterPost = qryAfterPost
     BeforeDelete = qryChainsBeforeDelete
-    Database = PQConn
+    Database = connMain
     Transaction = transChains
     SQL.Strings = (
       'SELECT'
@@ -104,7 +104,7 @@ object dmPgEngine: TdmPgEngine
   end
   object transChains: TSQLTransaction
     Active = False
-    Database = PQConn
+    Database = connMain
     Options = [stoUseImplicit]
     Left = 192
     Top = 312
@@ -119,7 +119,7 @@ object dmPgEngine: TdmPgEngine
     AfterPost = qryAfterPost
     AfterRefresh = qryTasksAfterOpen
     BeforePost = qryTasksBeforePost
-    Database = PQConn
+    Database = connMain
     Transaction = transChains
     SQL.Strings = (
       'WITH RECURSIVE x ('

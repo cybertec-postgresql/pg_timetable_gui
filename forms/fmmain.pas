@@ -353,7 +353,7 @@ end;
 
 procedure TfmMain.acConnectClick(Sender: TObject);
 begin
-  if not dmPgEngine.PQConn.Connected then
+  if not dmPgEngine.connMain.Connected then
     try
       dmPgEngine.Connect;
     except
