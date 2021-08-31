@@ -63,5 +63,4 @@ jobs:
           files: |
             *.zip
             *.tar.gz
-            LICENSE
           prerelease: true
