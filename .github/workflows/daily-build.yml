@@ -7,7 +7,7 @@ on:
       - main 
 
 jobs:
-  build:
+  daily_build:
     runs-on: ${{ matrix.operating-system }}
 
     strategy:
