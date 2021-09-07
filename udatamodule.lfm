@@ -123,6 +123,7 @@ object dmPgEngine: TdmPgEngine
     Transaction = transChains
     SQL.Strings = (
       'WITH RECURSIVE x ('
+      '    task_name,'
       '    parent_id,'
       '    task_id,'
       '    command,'
@@ -133,6 +134,7 @@ object dmPgEngine: TdmPgEngine
       '    connect_string'
       ') AS ('
       '    SELECT'
+      '        tc.task_name,'
       '        NULL::bigint,'
       '        tc.task_id,'
       '        tc.command,'
@@ -148,6 +150,7 @@ object dmPgEngine: TdmPgEngine
       '        AND tc.task_id = :"task_id"'
       '    UNION ALL'
       '    SELECT'
+      '        tc.task_name,'
       '        tc.parent_id,'
       '        tc.task_id,'
       '        tc.command,'
@@ -166,6 +169,7 @@ object dmPgEngine: TdmPgEngine
     )
     InsertSQL.Strings = (
       'INSERT INTO timetable.task('
+      '    task_name,'
       '    parent_id,'
       '    command,'
       '    kind,'
@@ -174,6 +178,7 @@ object dmPgEngine: TdmPgEngine
       '    autonomous,'
       '    database_connection'
       ') VALUES ('
+      '    :"task_name",'
       '    :"parent_id",'
       '    :"command",'
       '    :"kind",'
@@ -185,6 +190,7 @@ object dmPgEngine: TdmPgEngine
     )
     UpdateSQL.Strings = (
       'UPDATE timetable.task SET ('
+      '    task_name,'
       '    command,'
       '    kind,'
       '    run_as,'
@@ -192,6 +198,7 @@ object dmPgEngine: TdmPgEngine
       '    autonomous,'
       '    database_connection'
       '  ) = ('
+      '    :"task_name",'
       '    :"command",'
       '    :"kind",'
       '    :"run_as",'

@@ -251,6 +251,11 @@ object fmMain: TfmMain
             Color = clWindow
             Columns = <            
               item
+                Title.Caption = 'Task Name'
+                Width = 339
+                FieldName = 'task_name'
+              end            
+              item
                 MinSize = 9
                 MaxSize = 201
                 Title.Caption = 'task_id'
@@ -278,7 +283,7 @@ object fmMain: TfmMain
                 MaxSize = 99
                 SizePriority = 2
                 Title.Caption = 'Command'
-                Width = 508
+                Width = 339
                 FieldName = 'command'
               end            
               item
@@ -312,7 +317,7 @@ object fmMain: TfmMain
                 MinSize = 9
                 MaxSize = 201
                 Title.Caption = 'Connection String'
-                Width = 509
+                Width = 339
                 FieldName = 'connect_string'
               end>
             DataSource = dmPgEngine.dsTasks

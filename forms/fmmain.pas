@@ -251,7 +251,7 @@ begin
   acChainRefresh.Enabled := CanModify;
   tsChain.TabVisible := acChainDelete.Enabled;
   if acChainDelete.Enabled then
-     tsChain.Caption := 'Chain: ' + dmPgEngine.qryChains.FieldValues['chain_name'];
+     tsChain.Caption := 'Chain: ' + dmPgEngine.qryChains.FieldByName('chain_name').AsString;
 end;
 
 procedure TfmMain.acMoveTaskDownExecute(Sender: TObject);
@@ -351,6 +351,7 @@ end;
 procedure TfmMain.acTaskToolbarUpdate(Sender: TObject);
 var
   CanModify: boolean;
+  F: TField;
 begin
   CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
   acTaskAdd.Enabled := CanModify;
@@ -361,6 +362,15 @@ begin
   acTaskPost.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
   acTaskCancel.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
   acTaskRefresh.Enabled := CanModify;
+  tsTask.TabVisible := acTaskEdit.Enabled;
+  if tsTask.TabVisible then
+  begin
+    F := dmPgEngine.qryTasks.FieldByName('task_name');
+    if not F.IsNull then
+      tsTask.Caption := 'Task: ' + F.AsString
+    else
+      tsTask.Caption := 'Task: ' + LeftStr(dmPgEngine.qryTasks.FieldByName('command').AsString, 50);
+  end;
 end;
 
 procedure TfmMain.acConnectClick(Sender: TObject);
