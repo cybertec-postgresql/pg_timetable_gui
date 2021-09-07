@@ -47,7 +47,7 @@ var
 
 implementation
 
-uses uObjects, fmMain, fmConnect, Dialogs, UITypes, fmLog;
+uses uObjects, fmMain, fmConnect, Dialogs, UITypes;
 
 {$R *.lfm}
 
@@ -58,7 +58,7 @@ procedure TdmPgEngine.connMainLog(Sender: TSQLConnection;
 const et: array[TDBEventType] of string = ('detCustom', 'detPrepare', 'detExecute',
 'detFetch', 'detCommit', 'detRollBack', 'detParamValue', 'detActualSQL');
 begin
-  with fmLog.LogForm.mmLog.Lines do
+  with MainForm.mmLog.Lines do
   begin
     Append(Format('[%s:] %s' + LineEnding, [et[EventType], Msg]))
   end;
