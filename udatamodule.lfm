@@ -39,7 +39,6 @@ object dmPgEngine: TdmPgEngine
     SQL.Strings = (
       'SELECT'
       '  chain_id,'
-      '  task_id,'
       '  chain_name,'
       '  COALESCE(run_at, ''* * * * *'') as run_at,'
       '  max_instances,'
@@ -78,7 +77,6 @@ object dmPgEngine: TdmPgEngine
     UpdateSQL.Strings = (
       'UPDATE timetable.chain'
       'SET'
-      #9'"task_id"=:"task_id",'
       #9'"chain_name"=:"chain_name",'
       #9'"run_at"=:"run_at",'
       #9'"max_instances"=:"max_instances",'
@@ -122,55 +120,29 @@ object dmPgEngine: TdmPgEngine
     Database = connMain
     Transaction = transChains
     SQL.Strings = (
-      'WITH RECURSIVE x ('
+      'SELECT'
+      '    task_order,'
       '    task_name,'
-      '    parent_id,'
+      '    chain_id,'
       '    task_id,'
       '    command,'
       '    kind,'
       '    run_as,'
       '    ignore_error,'
       '    autonomous,'
-      '    connect_string'
-      ') AS ('
-      '    SELECT'
-      '        tc.task_name,'
-      '        NULL::bigint,'
-      '        tc.task_id,'
-      '        tc.command,'
-      '        tc.kind,'
-      '        tc.run_as,'
-      '        tc.ignore_error,'
-      '        tc.autonomous,'
-      '        tc.database_connection'
-      '    FROM'
-      '        timetable.task tc'
-      '    WHERE'
-      '        tc.parent_id IS NULL'
-      '        AND tc.task_id = :"task_id"'
-      '    UNION ALL'
-      '    SELECT'
-      '        tc.task_name,'
-      '        tc.parent_id,'
-      '        tc.task_id,'
-      '        tc.command,'
-      '        tc.kind,'
-      '        tc.run_as,'
-      '        tc.ignore_error,'
-      '        tc.autonomous,'
-      '        tc.database_connection'
-      '    FROM'
-      '        timetable.task tc'
-      '        JOIN x ON (x.task_id = tc.parent_id))'
-      'SELECT'
-      '    *'
+      '    database_connection'
       'FROM'
-      '    x'
+      '    timetable.task'
+      'WHERE'
+      '    chain_id = :"chain_id"'
+      'ORDER BY'
+      '    task_order ASC'
     )
     InsertSQL.Strings = (
       'INSERT INTO timetable.task('
+      '    task_order,'
+      '    chain_id,'
       '    task_name,'
-      '    parent_id,'
       '    command,'
       '    kind,'
       '    run_as,'
@@ -178,8 +150,9 @@ object dmPgEngine: TdmPgEngine
       '    autonomous,'
       '    database_connection'
       ') VALUES ('
+      '    :"task_order",'
+      '    :"chain_id",'
       '    :"task_name",'
-      '    :"parent_id",'
       '    :"command",'
       '    :"kind",'
       '    :"run_as",'
@@ -190,6 +163,7 @@ object dmPgEngine: TdmPgEngine
     )
     UpdateSQL.Strings = (
       'UPDATE timetable.task SET ('
+      '    task_oder,'
       '    task_name,'
       '    command,'
       '    kind,'
@@ -198,6 +172,7 @@ object dmPgEngine: TdmPgEngine
       '    autonomous,'
       '    database_connection'
       '  ) = ('
+      '    :"task_order",'
       '    :"task_name",'
       '    :"command",'
       '    :"kind",'
@@ -215,9 +190,8 @@ object dmPgEngine: TdmPgEngine
     Params = <    
       item
         DataType = ftLargeint
-        Name = 'task_id'
+        Name = 'chain_id'
         ParamType = ptInput
-        Size = 8
       end>
     ParseSQL = False
     DataSource = dsChains
