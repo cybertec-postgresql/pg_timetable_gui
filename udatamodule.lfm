@@ -95,6 +95,7 @@ object dmPgEngine: TdmPgEngine
     Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
     ParamCheck = False
+    Macros = <>
     ParseSQL = False
     UsePrimaryKeyAsKey = False
     Left = 105
@@ -158,7 +159,7 @@ object dmPgEngine: TdmPgEngine
       '    :"run_as",'
       '    :"ignore_error",'
       '    :"autonomous",'
-      '    :"connect_string"'
+      '    :"database_connection"'
       ')'
     )
     UpdateSQL.Strings = (
@@ -179,7 +180,7 @@ object dmPgEngine: TdmPgEngine
       '    :"run_as",'
       '    :"ignore_error",'
       '    :"autonomous",'
-      '    :"connect_string"'
+      '    :"database_connection"'
       '  )'
       'WHERE task_id = :"task_id"'
     )
@@ -193,6 +194,7 @@ object dmPgEngine: TdmPgEngine
         Name = 'chain_id'
         ParamType = ptInput
       end>
+    Macros = <>
     ParseSQL = False
     DataSource = dsChains
     Left = 192

@@ -30,7 +30,10 @@ type
     procedure qryTasksAfterOpen(DataSet: TDataSet);
     procedure qryTasksBeforePost(DataSet: TDataSet);
   private
-    FLastTaskID: integer;
+    const
+      DEFAULT_ORDER_DELTA: double = 10.0;
+    var
+      FLastTaskOrder: double;
   public
     procedure Connect;
     procedure Disconnect;
@@ -47,7 +50,7 @@ var
 
 implementation
 
-uses uObjects, fmMain, fmConnect, Dialogs, UITypes;
+uses uObjects, fmMain, fmConnect, Dialogs, System.UITypes;
 
 {$R *.lfm}
 
@@ -97,7 +100,7 @@ var
   FldName: string;
   Q: TSQLQuery;
 const
-  FldNames: array[boolean] of string = ('chain_name', 'parent_id');
+  FldNames: array[boolean] of string = ('chain_name', 'task_id');
 begin
   Q := DataSet as TSQLQuery;
   FldName := FldNames[Q = qryTasks];
@@ -129,7 +132,8 @@ procedure TdmPgEngine.qryTasksAfterInsert(DataSet: TDataSet);
 begin
   with DataSet do
   begin
-    FieldByName('parent_id').AsInteger := FLastTaskID;
+    FieldByName('chain_id').AsLargeInt := qryChains.FieldByName('chain_id').AsLargeInt;
+    FieldByName('task_order').AsFloat := FLastTaskOrder + DEFAULT_ORDER_DELTA;
     FieldByName('kind').AsString := 'SQL';
     FieldByName('ignore_error').AsBoolean := False;
     FieldByName('autonomous').AsBoolean := False;
@@ -139,7 +143,7 @@ end;
 procedure TdmPgEngine.qryTasksAfterOpen(DataSet: TDataSet);
 begin
   DataSet.Last();
-  FLastTaskID := DataSet.FieldByName('task_id').AsInteger;
+  FLastTaskOrder := DataSet.FieldByName('task_order').AsInteger;
 end;
 
 procedure TdmPgEngine.qryTasksBeforePost(DataSet: TDataSet);
@@ -224,7 +228,7 @@ end;
 
 function TdmPgEngine.IsTaskDeleteAllowed: boolean;
 begin
-  Result := not qryTasks.BOF and not qryTasks.EOF and not qryTasks.FieldByName('parent_id').IsNull;
+  Result := not qryTasks.BOF and not qryTasks.EOF;
 end;
 
 end.
