@@ -30,7 +30,10 @@ type
     procedure qryTasksAfterOpen(DataSet: TDataSet);
     procedure qryTasksBeforePost(DataSet: TDataSet);
   private
-    FLastTaskID: integer;
+    const
+      DEFAULT_ORDER_DELTA: double = 10.0;
+    var
+      FLastTaskOrder: double;
   public
     procedure Connect;
     procedure Disconnect;
@@ -47,7 +50,7 @@ var
 
 implementation
 
-uses uObjects, fmMain, fmConnect, Dialogs, UITypes, fmLog;
+uses uObjects, fmMain, fmConnect, Dialogs, System.UITypes;
 
 {$R *.lfm}
 
@@ -58,7 +61,7 @@ procedure TdmPgEngine.connMainLog(Sender: TSQLConnection;
 const et: array[TDBEventType] of string = ('detCustom', 'detPrepare', 'detExecute',
 'detFetch', 'detCommit', 'detRollBack', 'detParamValue', 'detActualSQL');
 begin
-  with fmLog.LogForm.mmLog.Lines do
+  with MainForm.mmLog.Lines do
   begin
     Append(Format('[%s:] %s' + LineEnding, [et[EventType], Msg]))
   end;
@@ -88,21 +91,18 @@ begin
     FieldByName('self_destruct').AsBoolean := False;
     FieldByName('exclusive_execution').AsBoolean := False;
     FieldByName('run_at').AsString := '* * * * *';
+    FieldByName('timeout').AsInteger := 0;
   end;
 end;
 
 procedure TdmPgEngine.qryAfterPost(DataSet: TDataSet);
 var
-  FldVal: variant;
-  FldName: string;
+  B: TBookmark;
   Q: TSQLQuery;
-const
-  FldNames: array[boolean] of string = ('chain_name', 'parent_id');
 begin
   Q := DataSet as TSQLQuery;
-  FldName := FldNames[Q = qryTasks];
   Q.IndexName := '';
-  FldVal := DataSet.FieldValues[FldName];
+  B := DataSet.GetBookmark;
   try
     Q.ApplyUpdates;
     DataSet.Refresh;
@@ -113,7 +113,7 @@ begin
       Q.CancelUpdates;
      end;
   end;
-  DataSet.Locate(FldName, FldVal, []);
+  DataSet.GotoBookmark(B);
   if Q = qryChains then
     fmMain.MainForm.UpdateSortIndication(nil);
 end;
@@ -129,7 +129,8 @@ procedure TdmPgEngine.qryTasksAfterInsert(DataSet: TDataSet);
 begin
   with DataSet do
   begin
-    FieldByName('parent_id').AsInteger := FLastTaskID;
+    FieldByName('chain_id').AsLargeInt := qryChains.FieldByName('chain_id').AsLargeInt;
+    FieldByName('task_order').AsFloat := FLastTaskOrder + DEFAULT_ORDER_DELTA;
     FieldByName('kind').AsString := 'SQL';
     FieldByName('ignore_error').AsBoolean := False;
     FieldByName('autonomous').AsBoolean := False;
@@ -139,7 +140,7 @@ end;
 procedure TdmPgEngine.qryTasksAfterOpen(DataSet: TDataSet);
 begin
   DataSet.Last();
-  FLastTaskID := DataSet.FieldByName('task_id').AsInteger;
+  FLastTaskOrder := DataSet.FieldByName('task_order').AsInteger;
 end;
 
 procedure TdmPgEngine.qryTasksBeforePost(DataSet: TDataSet);
@@ -224,7 +225,7 @@ end;
 
 function TdmPgEngine.IsTaskDeleteAllowed: boolean;
 begin
-  Result := not qryTasks.BOF and not qryTasks.EOF and not qryTasks.FieldByName('parent_id').IsNull;
+  Result := not qryTasks.BOF and not qryTasks.EOF;
 end;
 
 end.

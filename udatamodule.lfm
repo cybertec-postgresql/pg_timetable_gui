@@ -28,7 +28,52 @@ object dmPgEngine: TdmPgEngine
     PacketRecords = -1
     IndexName = 'DEFAULT_ORDER'
     MaxIndexesCount = 20
-    FieldDefs = <>
+    FieldDefs = <    
+      item
+        Name = 'chain_id'
+        DataType = ftLargeint
+        Precision = -1
+      end    
+      item
+        Name = 'chain_name'
+        DataType = ftWideString
+        Precision = -1
+      end    
+      item
+        Name = 'run_at'
+        DataType = ftMemo
+        Precision = -1
+      end    
+      item
+        Name = 'max_instances'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'live'
+        DataType = ftBoolean
+        Precision = -1
+      end    
+      item
+        Name = 'self_destruct'
+        DataType = ftBoolean
+        Precision = -1
+      end    
+      item
+        Name = 'exclusive_execution'
+        DataType = ftBoolean
+        Precision = -1
+      end    
+      item
+        Name = 'client_name'
+        DataType = ftMemo
+        Precision = -1
+      end    
+      item
+        Name = 'timeout'
+        DataType = ftInteger
+        Precision = -1
+      end>
     AfterClose = qryChainsAfterClose
     AfterDelete = qryChainsAfterDelete
     AfterInsert = qryChainsAfterInsert
@@ -39,7 +84,6 @@ object dmPgEngine: TdmPgEngine
     SQL.Strings = (
       'SELECT'
       '  chain_id,'
-      '  task_id,'
       '  chain_name,'
       '  COALESCE(run_at, ''* * * * *'') as run_at,'
       '  max_instances,'
@@ -47,14 +91,12 @@ object dmPgEngine: TdmPgEngine
       '  self_destruct,'
       '  exclusive_execution,'
       '  client_name,'
-      '  timeout,'
-      '  max_instances'
+      '  timeout'
       'FROM timetable.chain'
       'ORDER BY chain_id'
     )
     InsertSQL.Strings = (
       'INSERT INTO timetable.chain ('
-      #9'"task_id",'
       #9'"chain_name",'
       #9'"run_at",'
       #9'"max_instances",'
@@ -62,9 +104,8 @@ object dmPgEngine: TdmPgEngine
       #9'"self_destruct",'
       #9'"exclusive_execution",'
       #9'"client_name",'
-      '  "timeout"'
+      #9'"timeout"'
       ') VALUES ('
-      #9'timetable.add_task(''SQL'', ''SELECT 1'', NULL),'
       #9':"chain_name",'
       #9':"run_at",'
       #9':"max_instances",'
@@ -72,13 +113,12 @@ object dmPgEngine: TdmPgEngine
       #9':"self_destruct",'
       #9':"exclusive_execution",'
       #9':"client_name",'
-      '  :"timeout"'
+      #9':"timeout"'
       ')'
     )
     UpdateSQL.Strings = (
       'UPDATE timetable.chain'
       'SET'
-      #9'"task_id"=:"task_id",'
       #9'"chain_name"=:"chain_name",'
       #9'"run_at"=:"run_at",'
       #9'"max_instances"=:"max_instances",'
@@ -97,6 +137,7 @@ object dmPgEngine: TdmPgEngine
     Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
     ParamCheck = False
+    Macros = <>
     ParseSQL = False
     UsePrimaryKeyAsKey = False
     Left = 105
@@ -122,51 +163,29 @@ object dmPgEngine: TdmPgEngine
     Database = connMain
     Transaction = transChains
     SQL.Strings = (
-      'WITH RECURSIVE x ('
-      '    parent_id,'
+      'SELECT'
+      '    task_order,'
+      '    task_name,'
+      '    chain_id,'
       '    task_id,'
       '    command,'
       '    kind,'
       '    run_as,'
       '    ignore_error,'
       '    autonomous,'
-      '    connect_string'
-      ') AS ('
-      '    SELECT'
-      '        NULL::bigint,'
-      '        tc.task_id,'
-      '        tc.command,'
-      '        tc.kind,'
-      '        tc.run_as,'
-      '        tc.ignore_error,'
-      '        tc.autonomous,'
-      '        tc.database_connection'
-      '    FROM'
-      '        timetable.task tc'
-      '    WHERE'
-      '        tc.parent_id IS NULL'
-      '        AND tc.task_id = :"task_id"'
-      '    UNION ALL'
-      '    SELECT'
-      '        tc.parent_id,'
-      '        tc.task_id,'
-      '        tc.command,'
-      '        tc.kind,'
-      '        tc.run_as,'
-      '        tc.ignore_error,'
-      '        tc.autonomous,'
-      '        tc.database_connection'
-      '    FROM'
-      '        timetable.task tc'
-      '        JOIN x ON (x.task_id = tc.parent_id))'
-      'SELECT'
-      '    *'
+      '    database_connection'
       'FROM'
-      '    x'
+      '    timetable.task'
+      'WHERE'
+      '    chain_id = :"chain_id"'
+      'ORDER BY'
+      '    task_order ASC'
     )
     InsertSQL.Strings = (
       'INSERT INTO timetable.task('
-      '    parent_id,'
+      '    task_order,'
+      '    chain_id,'
+      '    task_name,'
       '    command,'
       '    kind,'
       '    run_as,'
@@ -174,17 +193,21 @@ object dmPgEngine: TdmPgEngine
       '    autonomous,'
       '    database_connection'
       ') VALUES ('
-      '    :"parent_id",'
+      '    :"task_order",'
+      '    :"chain_id",'
+      '    :"task_name",'
       '    :"command",'
       '    :"kind",'
       '    :"run_as",'
       '    :"ignore_error",'
       '    :"autonomous",'
-      '    :"connect_string"'
+      '    :"database_connection"'
       ')'
     )
     UpdateSQL.Strings = (
       'UPDATE timetable.task SET ('
+      '    task_order,'
+      '    task_name,'
       '    command,'
       '    kind,'
       '    run_as,'
@@ -192,12 +215,14 @@ object dmPgEngine: TdmPgEngine
       '    autonomous,'
       '    database_connection'
       '  ) = ('
+      '    :"task_order",'
+      '    :"task_name",'
       '    :"command",'
       '    :"kind",'
       '    :"run_as",'
       '    :"ignore_error",'
       '    :"autonomous",'
-      '    :"connect_string"'
+      '    :"database_connection"'
       '  )'
       'WHERE task_id = :"task_id"'
     )
@@ -208,10 +233,10 @@ object dmPgEngine: TdmPgEngine
     Params = <    
       item
         DataType = ftLargeint
-        Name = 'task_id'
+        Name = 'chain_id'
         ParamType = ptInput
-        Size = 8
       end>
+    Macros = <>
     ParseSQL = False
     DataSource = dsChains
     Left = 192

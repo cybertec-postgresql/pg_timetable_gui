@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="pg_timetable_gui"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
@@ -101,7 +103,6 @@
     </PublishOptions>
     <RunParams>
       <FormatVersion Value="2"/>
-      <Modes Count="0"/>
     </RunParams>
     <RequiredPackages Count="4">
       <Item1>
@@ -117,7 +118,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="9">
+    <Units Count="8">
       <Unit0>
         <Filename Value="pg_timetable_gui.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -163,14 +164,6 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmConnect"/>
       </Unit7>
-      <Unit8>
-        <Filename Value="forms\fmlog.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="fmLog"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fmLog"/>
-      </Unit8>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

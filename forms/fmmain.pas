@@ -32,6 +32,7 @@ type
     btnTaskMoveUp: TToolButton;
     gridTasks: TDBGrid;
     gridChains: TDBGrid;
+    imglTabs: TImageList;
     imglToolbarsDisabled: TImageList;
     imglToolbars: TImageList;
     imglGrids: TImageList;
@@ -43,10 +44,17 @@ type
     miClose: TMenuItem;
     miHelp: TMenuItem;
     miAbout: TMenuItem;
+    mmLog: TMemo;
+    pnlAdmin: TPanel;
+    pcEditors: TPageControl;
     pnlMainToolbar: TPanel;
     pnlChains: TPanel;
     pnlDetails: TPanel;
     splitChain: TSplitter;
+    tsTask: TTabSheet;
+    tsChain: TTabSheet;
+    tsLog: TTabSheet;
+    tsOverview: TTabSheet;
     toolbarChains: TToolBar;
     toolbarMain: TToolBar;
     btnConnect: TToolButton;
@@ -102,7 +110,7 @@ var
 
 implementation
 
-uses uDataModule, SQLDB, LCLType, RegExpr, fmLog;
+uses uDataModule, SQLDB, LCLType, RegExpr;
 
 {$R *.lfm}
 
@@ -217,7 +225,8 @@ end;
 
 procedure TfmMain.miLogClick(Sender: TObject);
 begin
-  fmLog.LogForm.Visible := not fmLog.LogForm.Visible;
+  tsLog.TabVisible := not tsLog.TabVisible;
+  if tsLog.TabVisible then tsLog.Show();
 end;
 
 procedure TfmMain.UpdateSortIndication(ACol: TColumn);
@@ -232,7 +241,7 @@ procedure TfmMain.acChainToolbarUpdate(Sender: TObject);
 var
   CanModify: boolean;
 begin
-  CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
+  CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryChains.CanModify;
   acChainAdd.Enabled := CanModify;
   acChainDelete.Enabled := CanModify and
     (not (dmPgEngine.qryChains.BOF and dmPgEngine.qryChains.EOF));
@@ -240,6 +249,9 @@ begin
   acChainPost.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
   acChainCancel.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
   acChainRefresh.Enabled := CanModify;
+  tsChain.TabVisible := acChainDelete.Enabled;
+  if acChainDelete.Enabled then
+     tsChain.Caption := 'Chain: ' + dmPgEngine.qryChains.FieldByName('chain_name').AsString;
 end;
 
 procedure TfmMain.acMoveTaskDownExecute(Sender: TObject);
@@ -339,6 +351,7 @@ end;
 procedure TfmMain.acTaskToolbarUpdate(Sender: TObject);
 var
   CanModify: boolean;
+  F: TField;
 begin
   CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
   acTaskAdd.Enabled := CanModify;
@@ -349,6 +362,15 @@ begin
   acTaskPost.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
   acTaskCancel.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
   acTaskRefresh.Enabled := CanModify;
+  tsTask.TabVisible := acTaskEdit.Enabled;
+  if tsTask.TabVisible then
+  begin
+    F := dmPgEngine.qryTasks.FieldByName('task_name');
+    if not F.IsNull then
+      tsTask.Caption := 'Task: ' + F.AsString
+    else
+      tsTask.Caption := 'Task: ' + LeftStr(dmPgEngine.qryTasks.FieldByName('command').AsString, 50);
+  end;
 end;
 
 procedure TfmMain.acConnectClick(Sender: TObject);
@@ -358,7 +380,7 @@ begin
       dmPgEngine.Connect;
     except
       on EAbort do
-        fmLog.LogForm.mmLog.Lines.Append('Connection cancelled by the user');
+        mmLog.Lines.Append('Connection cancelled by the user');
       on E: Exception do
         MessageDlg('PostgreSQL Error', E.Message, mtError, [mbOK], 0);
     end
