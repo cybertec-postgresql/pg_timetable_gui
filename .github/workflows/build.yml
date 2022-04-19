@@ -7,27 +7,15 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.operating-system }}
-
     strategy:
       matrix:
-        kind: ['linux', 'windows', 'macOS']
-        include:
-          - kind: linux
-            operating-system: ubuntu-latest
-            target: linux-x64
-          - kind: windows
-            operating-system: windows-latest
-            target: win-x64
-          - kind: macOS
-            operating-system: windows-latest
-            target: osx-x64
-    
-        lazarus-versions: [stable] # [dist, stable, 2.0.10, 2.0.6, 1.6.4, 1.6.2, 1.4.4, 1.2]
+        operating-system: [windows-latest,ubuntu-latest,macos-latest]
+        lazarus-versions: [stable] #[dist, stable, 2.0.12, 2.0.10, 2.0.8, 2.0.6]
 
     steps:
     - uses: actions/checkout@v2
     - name: Install Lazarus
-      uses: gcarreno/setup-lazarus@v3.0.2
+      uses: gcarreno/setup-lazarus@v3.0.16
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
         # include-packages: "Synapse 40.1"
