@@ -91,21 +91,18 @@ begin
     FieldByName('self_destruct').AsBoolean := False;
     FieldByName('exclusive_execution').AsBoolean := False;
     FieldByName('run_at').AsString := '* * * * *';
+    FieldByName('timeout').AsInteger := 0;
   end;
 end;
 
 procedure TdmPgEngine.qryAfterPost(DataSet: TDataSet);
 var
-  FldVal: variant;
-  FldName: string;
+  B: TBookmark;
   Q: TSQLQuery;
-const
-  FldNames: array[boolean] of string = ('chain_name', 'task_id');
 begin
   Q := DataSet as TSQLQuery;
-  FldName := FldNames[Q = qryTasks];
   Q.IndexName := '';
-  FldVal := DataSet.FieldValues[FldName];
+  B := DataSet.GetBookmark;
   try
     Q.ApplyUpdates;
     DataSet.Refresh;
@@ -116,7 +113,7 @@ begin
       Q.CancelUpdates;
      end;
   end;
-  DataSet.Locate(FldName, FldVal, []);
+  DataSet.GotoBookmark(B);
   if Q = qryChains then
     fmMain.MainForm.UpdateSortIndication(nil);
 end;
