@@ -28,7 +28,9 @@ type
     acChainPost: TAction;
     acChainCancel: TAction;
     acChainRefresh: TAction;
+    acChainRun: TAction;
     alToolbars: TActionList;
+    btnChainRun: TToolButton;
     btnTaskMoveUp: TToolButton;
     gridTasks: TDBGrid;
     gridChains: TDBGrid;
@@ -51,8 +53,7 @@ type
     pnlChains: TPanel;
     pnlDetails: TPanel;
     splitChain: TSplitter;
-    tsTask: TTabSheet;
-    tsChain: TTabSheet;
+    toolbarRun: TToolBar;
     tsLog: TTabSheet;
     tsOverview: TTabSheet;
     toolbarChains: TToolBar;
@@ -249,9 +250,7 @@ begin
   acChainPost.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
   acChainCancel.Enabled := CanModify and (dmPgEngine.qryChains.State in dsEditModes);
   acChainRefresh.Enabled := CanModify;
-  tsChain.TabVisible := acChainDelete.Enabled;
-  if acChainDelete.Enabled then
-     tsChain.Caption := 'Chain: ' + dmPgEngine.qryChains.FieldByName('chain_name').AsString;
+  acChainRun.Enabled := acChainDelete.Enabled;
 end;
 
 procedure TfmMain.acMoveTaskDownExecute(Sender: TObject);
@@ -351,7 +350,6 @@ end;
 procedure TfmMain.acTaskToolbarUpdate(Sender: TObject);
 var
   CanModify: boolean;
-  F: TField;
 begin
   CanModify := dmPgEngine.IsConnected() and dmPgEngine.qryTasks.CanModify;
   acTaskAdd.Enabled := CanModify;
@@ -362,15 +360,6 @@ begin
   acTaskPost.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
   acTaskCancel.Enabled := CanModify and (dmPgEngine.qryTasks.State in dsEditModes);
   acTaskRefresh.Enabled := CanModify;
-  tsTask.TabVisible := acTaskEdit.Enabled;
-  if tsTask.TabVisible then
-  begin
-    F := dmPgEngine.qryTasks.FieldByName('task_name');
-    if not F.IsNull then
-      tsTask.Caption := 'Task: ' + F.AsString
-    else
-      tsTask.Caption := 'Task: ' + LeftStr(dmPgEngine.qryTasks.FieldByName('command').AsString, 50);
-  end;
 end;
 
 procedure TfmMain.acConnectClick(Sender: TObject);
