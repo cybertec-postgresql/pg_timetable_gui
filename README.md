@@ -13,23 +13,23 @@
 Enhanced description of chain and task properties can be found in the official [pg_timetable manual](https://pg-timetable.readthedocs.io/en/master/).
 
 ## Controls
-![connect/disconnect](res/shut-down-24px.png) - connect/disconnect to the target PostgreSQL database
+![connect/disconnect](res/shut-down.png) - connect/disconnect to the target PostgreSQL database
 
-![add](res/nav-add-24px.png) - add chain/task
+![add](res/nav-add.png) - add chain/task
 
-![delete](res/nav-delete-24px.png) - delete chain/task
+![delete](res/nav-delete.png) - delete chain/task
 
-![edit](res/nav-edit-24px.png) - edit current chain/task
+![edit](res/nav-edit.png) - edit current chain/task
 
-![post](res/nav-post-24px.png) - post chain/task changes to the database
+![post](res/nav-post.png) - post chain/task changes to the database
 
-![cancel](res/nav-cancel-24px.png) - cancel editing chain/task
+![cancel](res/nav-cancel.png) - cancel editing chain/task
 
-![refresh](res/nav-refresh-24px.png) - refresh chain/task list
+![refresh](res/nav-refresh.png) - refresh chain/task list
 
-![up](res/nav-up-24px.png) - move task up in the chain order
+![up](res/nav-up.png) - move task up in the chain order
 
-![down](res/nav-down-24px.png) - move task down in the chain order
+![down](res/nav-down.png) - move task down in the chain order
 
 ## Main features
 - List database chains and tasks ✅
