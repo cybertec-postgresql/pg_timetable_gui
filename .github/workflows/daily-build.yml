@@ -4,11 +4,14 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main 
+      - 'main' 
+    paths:
+      - '**.pas'
+      - '**.lfm'
 
 jobs:
   daily_build:
-    if: false # set to false to disable
+    if: true # set to false to disable
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
