@@ -8,6 +8,7 @@ on:
 
 jobs:
   daily_build:
+    if: false # set to false to disable
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
@@ -15,7 +16,10 @@ jobs:
         lazarus-versions: [stable] #[dist, stable, 2.0.12, 2.0.10, 2.0.8, 2.0.6]
 
     steps:
-    - uses: actions/checkout@v2
+    
+    - name: Check out the latest version
+      uses: actions/checkout@v2
+
     - name: Install Lazarus
       uses: gcarreno/setup-lazarus@v3.2
       with:
@@ -35,9 +39,9 @@ jobs:
     - name: Pack
       shell: bash
       run: |
-          release_name="pg_timetable_gui-${{ matrix.target }}"
+          release_name="pg_timetable_gui-${{ matrix.operating-system }}"
           ls -a
-          if [ "${{ matrix.target }}" == "win-x64" ]; then
+          if [ "${{ matrix.operating-system }}" == "windows-latest" ]; then
             # Pack to zip for Windows
             7z a -tzip "${release_name}.zip" "pg_timetable_gui.exe"
           else
