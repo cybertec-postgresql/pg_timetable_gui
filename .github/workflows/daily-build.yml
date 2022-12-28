@@ -27,7 +27,7 @@ jobs:
       uses: gcarreno/setup-lazarus@v3.2
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
-        # include-packages: "Synapse 40.1"
+        with-cache: false
 
     - name: Build the application
       if: ${{ matrix.operating-system != 'macos-latest' }}

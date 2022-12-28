@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
-  StdCtrls, DBGrids, DBCtrls, ExtCtrls, uObjects, DB, Grids, ActnList, Buttons;
+  StdCtrls, DBGrids, DBCtrls, ExtCtrls, uObjects, DB, Grids, ActnList, Buttons,
+  frameTaskCommand;
 
 type
 
@@ -96,12 +97,14 @@ type
     procedure gridChainsTitleClick(Column: TColumn);
     procedure gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: integer; Column: TColumn; State: TGridDrawState);
+    procedure gridTasksEditButtonClick(Sender: TObject);
     procedure gridTasksSelectEditor(Sender: TObject; Column: TColumn;
       var Editor: TWinControl);
     procedure miCloseClick(Sender: TObject);
     procedure miLogClick(Sender: TObject);
   private
     FLastColumn: TColumn; //last sorted grid column
+    FTaskCmd: TfrmTaskCommand;
   public
     procedure UpdateSortIndication(ACol: TColumn);
   end;
@@ -208,15 +211,27 @@ begin
   imglGrids.Draw(gridTasks.Canvas, aLeft, aTop, ImgIdx);
 end;
 
+procedure TfmMain.gridTasksEditButtonClick(Sender: TObject);
+begin
+  if not Assigned(FTaskCmd) then
+  begin
+    FTaskCmd := TfrmTaskCommand.Create(Self);
+    FTaskCmd.Parent := gridTasks;
+  end;
+  FTaskCmd.ShowEditor(gridTasks.SelectedField, gridTasks.SelectedFieldRect.TopLeft);
+end;
+
 procedure TfmMain.gridTasksSelectEditor(Sender: TObject; Column: TColumn;
   var Editor: TWinControl);
 begin
-  if Column.FieldName = 'kind' then
+  case Column.FieldName of
+  'kind':
     with Editor as TCustomComboBox do
     begin
       Style := csDropDownList;
       AutoDropDown := True;
     end;
+  end;
 end;
 
 procedure TfmMain.miCloseClick(Sender: TObject);

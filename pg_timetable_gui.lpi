@@ -118,7 +118,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="8">
+    <Units Count="9">
       <Unit0>
         <Filename Value="pg_timetable_gui.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -164,6 +164,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmConnect"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="forms\frametaskcommand.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmTaskCommand"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="frameTaskCommand"/>
+      </Unit8>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
