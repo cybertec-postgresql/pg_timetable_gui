@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
   StdCtrls, DBGrids, DBCtrls, ExtCtrls, uObjects, DB, Grids, ActnList, Buttons,
-  frameTaskCommand;
+  frameTaskCommandEditor;
 
 type
 
@@ -104,7 +104,7 @@ type
     procedure miLogClick(Sender: TObject);
   private
     FLastColumn: TColumn; //last sorted grid column
-    FTaskCmd: TfrmTaskCommand;
+    FTaskCmd: TfrmTaskCommandEditor;
   public
     procedure UpdateSortIndication(ACol: TColumn);
   end;
@@ -215,7 +215,7 @@ procedure TfmMain.gridTasksEditButtonClick(Sender: TObject);
 begin
   if not Assigned(FTaskCmd) then
   begin
-    FTaskCmd := TfrmTaskCommand.Create(Self);
+    FTaskCmd := TfrmTaskCommandEditor.Create(Self);
     FTaskCmd.Parent := gridTasks;
   end;
   FTaskCmd.ShowEditor(gridTasks.SelectedField, gridTasks.SelectedFieldRect.TopLeft);

@@ -8,7 +8,7 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads} cthreads, {$ENDIF} {$ENDIF}
   lazcontrols,
   fmMain, fmConnect,
   uDataModule,
-  uObjects;
+  uObjects, frameTaskCommandEditor;
 
 {$R *.res}
 
