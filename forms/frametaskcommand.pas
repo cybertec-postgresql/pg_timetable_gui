@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, SynEdit,
-  SynHighlighterSQL, LCLType, Db;
+  SynHighlighterSQL, LCLType, ComCtrls, Db;
 
 type
 
@@ -28,6 +28,7 @@ type
     procedure ShowEditor(AField: TField; ATopLeft: TPoint);
     procedure HideEditor();
     procedure ApplyChanges();
+    procedure CreateParams(var Params: TCreateParams); override;
   end;
 
 implementation
@@ -76,6 +77,12 @@ begin
   fldCommand.DataSet.Edit;
   fldCommand.AsString := edCommand.Text;
   HideEditor();
+end;
+
+procedure TfrmTaskCommand.CreateParams(var Params: TCreateParams);
+begin
+  inherited CreateParams(Params);
+  Params.Style := Params.Style or WS_SIZEBOX;
 end;
 
 end.
