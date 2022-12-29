@@ -39,7 +39,7 @@ type
     procedure Disconnect;
     function IsCronValueValid(const S: string): boolean;
     function IsConnected: boolean;
-    function SelectSQL(const sql: string): string;
+    function SelectSQL(const sql: string; params: array of string): string;
     procedure MoveTaskUp(const ATaskID: integer);
     procedure MoveTaskDown(const ATaskID: integer);
     function IsTaskDeleteAllowed: boolean;
@@ -187,9 +187,11 @@ begin
   Result := qryChains.Active and qryTasks.Active;
 end;
 
-function TdmPgEngine.SelectSQL(const sql: string): string;
+function TdmPgEngine.SelectSQL(const sql: string; params: array of string): string;
 var
   Q: TSQLQuery;
+  i: Integer;
+  NewParams: TSQLDBParams;
 begin
   Result := '';
   Q := TSQLQuery.Create(nil);
@@ -197,15 +199,17 @@ begin
     Q.DataBase := connMain;
     Q.Transaction := connMain.Transaction;
     Q.SQL.Text := sql;
+    for i := Low(params) to High(params) do
+      Q.Params[i].AsString := params[i];
     try
       Q.Open;
       while not Q.EOF do
       begin
-        Result := Result + LineEnding + Q.Fields[0].AsString;
+        Result := Result + Q.Fields[0].AsString + LineEnding;
         Q.Next;
       end;
-    except
-      Exit;
+    except on E: exception do
+      connMainLog(connMain, detCustom, E.Message);
     end;
     Q.Close;
   finally

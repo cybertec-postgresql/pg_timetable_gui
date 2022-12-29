@@ -21,6 +21,7 @@ type
     function GetEditorValue(): string; override;
     procedure SetEditorValue(AText: string); override;
     procedure SetFocus; override;
+    procedure CreateParams(var Params: TCreateParams); override;
   end;
 
 implementation
@@ -51,6 +52,12 @@ end;
 procedure TfrmTaskCommandEditor.SetFocus;
 begin
   edCommand.SetFocus();
+end;
+
+procedure TfrmTaskCommandEditor.CreateParams(var Params: TCreateParams);
+begin
+  inherited CreateParams(Params);
+  Params.Style := Params.Style or WS_SIZEBOX;
 end;
 
 end.

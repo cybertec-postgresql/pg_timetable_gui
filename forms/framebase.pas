@@ -26,7 +26,6 @@ type
     procedure ShowEditor(AField: TField; ATopLeft: TPoint);
     procedure HideEditor();
     procedure ApplyChanges();
-    procedure CreateParams(var Params: TCreateParams); override;
   end;
 
 implementation
@@ -66,12 +65,6 @@ begin
   fldCommand.DataSet.Edit;
   fldCommand.AsString := GetEditorValue();
   HideEditor();
-end;
-
-procedure TBaseFrame.CreateParams(var Params: TCreateParams);
-begin
-  inherited CreateParams(Params);
-  Params.Style := Params.Style or WS_SIZEBOX;
 end;
 
 end.

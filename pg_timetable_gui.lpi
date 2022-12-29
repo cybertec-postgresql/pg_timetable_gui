@@ -118,7 +118,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="10">
+    <Units Count="11">
       <Unit0>
         <Filename Value="pg_timetable_gui.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -179,6 +179,14 @@
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="frameTaskCommandEditor"/>
       </Unit9>
+      <Unit10>
+        <Filename Value="forms\framecroneditor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCronEditor"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="frameCronEditor"/>
+      </Unit10>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

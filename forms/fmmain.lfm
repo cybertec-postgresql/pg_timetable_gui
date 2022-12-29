@@ -20,6 +20,7 @@ object fmMain: TfmMain
     Images = imglTabs
     TabIndex = 0
     TabOrder = 0
+    OnChange = pcEditorsChange
     object tsOverview: TTabSheet
       Caption = 'Overview'
       ClientHeight = 986
@@ -82,6 +83,7 @@ object fmMain: TfmMain
                 FieldName = 'live'
               end            
               item
+                ButtonStyle = cbsEllipsis
                 PickList.Strings = (
                   '* * * * *'
                   '@every <interval>'
@@ -137,6 +139,7 @@ object fmMain: TfmMain
             TabAdvance = aaRight
             TabOrder = 0
             TitleImageList = imglGrids
+            OnEditButtonClick = gridChainsEditButtonClick
             OnEditingDone = gridChainsEditingDone
             OnTitleClick = gridChainsTitleClick
           end

@@ -6,6 +6,7 @@ object BaseFrame: TBaseFrame
   ClientHeight = 360
   ClientWidth = 480
   DesignTimePPI = 144
+  LCLVersion = '2.2.4.0'
   OnExit = FrameExit
   ParentFont = False
   TabOrder = 0
