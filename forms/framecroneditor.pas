@@ -22,7 +22,9 @@ type
     lblMonth: TLabel;
     mmRuns: TMemo;
     pnlEditor: TPanel;
+    timerChange: TTimer;
     procedure edCronChange(Sender: TObject);
+    procedure timerChangeTimer(Sender: TObject);
   private
 
   public
@@ -40,38 +42,43 @@ uses RegExpr, uDataModule;
 { TfrmCronEditor }
 
 procedure TfrmCronEditor.edCronChange(Sender: TObject);
+begin
+  timerChange.Enabled := True; //start timer to update next runs
+end;
+
+procedure TfrmCronEditor.timerChangeTimer(Sender: TObject);
 var
   ValidCron: boolean;
   S: string;
+  Output: string;
 const
   cronRE          = '^(((\d+,)+\d+|(\d+(\/|-)\d+)|(\*(\/|-)\d+)|\d+|\*) +){4}'+
                     '(((\d+,)+\d+|(\d+(\/|-)\d+)|(\*(\/|-)\d+)|\d+|\*) ?)$';
   sqlCronRuns     = 'SELECT to_char(r.r, ''FMDay, FMDD FMMon YYYY at HH24:MI:SS'') FROM '+
                     'generate_series(now(), now() + 10 * :cron :: interval, :cron :: interval) AS r(r) LIMIT 10';
   sqlIntervalRuns = 'SELECT to_char(r.r, ''FMDay, FMDD FMMon YYYY at HH24:MI:SS'') FROM '+
-                    'timetable.cron_runs(now(), $1) AS r(r) LIMIT 10';
+                    'timetable.cron_runs(now(), :cron) AS r(r) LIMIT 10';
   minIntervalLen  = length('@every '); // @ modifier and at least one space char
 begin
+  timerChange.Enabled := False;
   S := edCron.Text;
   ValidCron := S.Trim() = '@reboot';
   if not ValidCron then
     if S.StartsWith('@every ') or S.StartsWith('@after ') then //special values
-    begin
-      ValidCron := (S.Length > minIntervalLen) and dmPgEngine.IsCronValueValid(S);
-      if ValidCron then
-        mmRuns.Text := dmPgEngine.SelectSQL(sqlCronRuns, [S.Substring(minIntervalLen)]);
-    end
+      ValidCron := (S.Length > minIntervalLen)
+                   and dmPgEngine.IsCronValueValid(S)
+                   and dmPgEngine.SelectSQL(sqlCronRuns, [S.Substring(minIntervalLen)], Output)
   else
     with TRegExpr.Create(cronRE) do
     try
-      ValidCron := Exec(S);
-      if ValidCron then
-        mmRuns.Text := dmPgEngine.SelectSQL(sqlIntervalRuns, [S]);
+      ValidCron := Exec(S) and dmPgEngine.SelectSQL(sqlIntervalRuns, [S], Output);
     finally
       Free();
     end;
+  mmRuns.Text := Output;
   if ValidCron then edCron.Color := clDefault else edCron.Color := clRed;
 end;
+
 
 function TfrmCronEditor.GetEditorValue: string;
 begin

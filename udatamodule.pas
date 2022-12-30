@@ -39,7 +39,7 @@ type
     procedure Disconnect;
     function IsCronValueValid(const S: string): boolean;
     function IsConnected: boolean;
-    function SelectSQL(const sql: string; params: array of string): string;
+    function SelectSQL(const sql: string; params: array of string; out Output: string): boolean;
     procedure MoveTaskUp(const ATaskID: integer);
     procedure MoveTaskDown(const ATaskID: integer);
     function IsTaskDeleteAllowed: boolean;
@@ -187,13 +187,13 @@ begin
   Result := qryChains.Active and qryTasks.Active;
 end;
 
-function TdmPgEngine.SelectSQL(const sql: string; params: array of string): string;
+function TdmPgEngine.SelectSQL(const sql: string; params: array of string; out Output: string): boolean;
 var
   Q: TSQLQuery;
   i: Integer;
-  NewParams: TSQLDBParams;
 begin
-  Result := '';
+  Result := True;
+  Output := '';
   Q := TSQLQuery.Create(nil);
   try
     Q.DataBase := connMain;
@@ -205,11 +205,18 @@ begin
       Q.Open;
       while not Q.EOF do
       begin
-        Result := Result + Q.Fields[0].AsString + LineEnding;
+        Output := Output + Q.Fields[0].AsString + LineEnding;
         Q.Next;
       end;
-    except on E: exception do
-      connMainLog(connMain, detCustom, E.Message);
+    except
+      on E: Exception do
+      begin
+        Result := False;
+        if E is EPQDatabaseError then
+          Output := EPQDatabaseError(E).MESSAGE_PRIMARY
+        else
+          Output := E.Message;
+      end;
     end;
     Q.Close;
   finally

@@ -1,7 +1,15 @@
 inherited frmCronEditor: TfrmCronEditor
   Width = 472
   ClientWidth = 472
-  object pnlEditor: TPanel[0]
+  inherited pnlButtons: TPanel
+    Width = 472
+    ClientWidth = 472
+    inherited btnCancel: TButton
+      OnClick = FrameExit
+      OnExit = nil
+    end
+  end
+  object pnlEditor: TPanel[1]
     Left = 0
     Height = 304
     Top = 0
@@ -94,12 +102,10 @@ inherited frmCronEditor: TfrmCronEditor
       ParentColor = False
     end
   end
-  inherited pnlButtons: TPanel[1]
-    Width = 472
-    ClientWidth = 472
-    inherited btnCancel: TButton
-      OnClick = FrameExit
-      OnExit = nil
-    end
+  object timerChange: TTimer[2]
+    Enabled = False
+    OnTimer = timerChangeTimer
+    Left = 416
+    Top = 88
   end
 end
