@@ -1,0 +1,111 @@
+inherited frmCronEditor: TfrmCronEditor
+  Width = 472
+  ClientWidth = 472
+  inherited pnlButtons: TPanel
+    Width = 472
+    ClientWidth = 472
+    inherited btnCancel: TButton
+      OnClick = FrameExit
+      OnExit = nil
+    end
+  end
+  object pnlEditor: TPanel[1]
+    Left = 0
+    Height = 304
+    Top = 0
+    Width = 472
+    Align = alClient
+    ClientHeight = 304
+    ClientWidth = 472
+    TabOrder = 1
+    object edCron: TEdit
+      Left = 48
+      Height = 35
+      Top = 41
+      Width = 375
+      Alignment = taCenter
+      Font.Height = -24
+      Font.Name = 'Courier New'
+      Font.Pitch = fpFixed
+      OnChange = edCronChange
+      ParentFont = False
+      TabOrder = 0
+      Text = '* * * * *'
+    end
+    object mmRuns: TMemo
+      Left = 48
+      Height = 180
+      Top = 112
+      Width = 375
+      Color = clInfoBk
+      Lines.Strings = (
+        'mmRuns'
+      )
+      TabOrder = 1
+    end
+    object lblNextRuns: TLabel
+      Left = 26
+      Height = 25
+      Top = 80
+      Width = 79
+      Caption = 'Next runs:'
+      ParentColor = False
+    end
+    object lblDayMonth: TLabel
+      Left = 198
+      Height = 25
+      Top = 16
+      Width = 75
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Day'
+      ParentColor = False
+    end
+    object lblMonth: TLabel
+      Left = 273
+      Height = 25
+      Top = 16
+      Width = 75
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Month'
+      ParentColor = False
+    end
+    object lblWeekday: TLabel
+      Left = 348
+      Height = 25
+      Top = 16
+      Width = 75
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Week'
+      ParentColor = False
+    end
+    object lblHour: TLabel
+      Left = 123
+      Height = 25
+      Top = 16
+      Width = 75
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Hour'
+      ParentColor = False
+    end
+    object lblMinute: TLabel
+      Left = 48
+      Height = 25
+      Top = 17
+      Width = 75
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Minute'
+      ParentColor = False
+    end
+  end
+  object timerChange: TTimer[2]
+    Enabled = False
+    OnTimer = timerChangeTimer
+    Left = 416
+    Top = 88
+  end
+end

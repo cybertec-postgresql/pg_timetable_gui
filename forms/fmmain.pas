@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
   StdCtrls, DBGrids, DBCtrls, ExtCtrls, uObjects, DB, Grids, ActnList, Buttons,
-  frameTaskCommand;
+  frameTaskCommandEditor, frameCronEditor;
 
 type
 
@@ -93,6 +93,7 @@ type
     procedure acTaskToolbarUpdate(Sender: TObject);
     procedure acConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
+    procedure gridChainsEditButtonClick(Sender: TObject);
     procedure gridChainsEditingDone(Sender: TObject);
     procedure gridChainsTitleClick(Column: TColumn);
     procedure gridTasksDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -102,9 +103,11 @@ type
       var Editor: TWinControl);
     procedure miCloseClick(Sender: TObject);
     procedure miLogClick(Sender: TObject);
+    procedure pcEditorsChange(Sender: TObject);
   private
     FLastColumn: TColumn; //last sorted grid column
-    FTaskCmd: TfrmTaskCommand;
+    FTaskCmd: TfrmTaskCommandEditor;
+    FCronEdit: TfrmCronEditor;
   public
     procedure UpdateSortIndication(ACol: TColumn);
   end;
@@ -114,7 +117,7 @@ var
 
 implementation
 
-uses uDataModule, SQLDB, LCLType, RegExpr;
+uses uDataModule, SQLDB, LCLType;
 
 {$R *.lfm}
 
@@ -124,6 +127,19 @@ procedure TfmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   dmPgEngine.Disconnect;
   CanClose := True;
+end;
+
+procedure TfmMain.gridChainsEditButtonClick(Sender: TObject);
+var
+  P: TPoint;
+begin
+  if not Assigned(FCronEdit) then
+  begin
+    FCronEdit := TfrmCronEditor.Create(Self);
+    FCronEdit.Parent := Self;
+  end;
+  P := gridChains.ClientToParent(gridChains.SelectedFieldRect.TopLeft, Self);
+  FCronEdit.ShowEditor(gridChains.SelectedField, P);
 end;
 
 procedure TfmMain.gridChainsEditingDone(Sender: TObject);
@@ -212,13 +228,16 @@ begin
 end;
 
 procedure TfmMain.gridTasksEditButtonClick(Sender: TObject);
+var
+  P: TPoint;
 begin
   if not Assigned(FTaskCmd) then
   begin
-    FTaskCmd := TfrmTaskCommand.Create(Self);
-    FTaskCmd.Parent := gridTasks;
+    FTaskCmd := TfrmTaskCommandEditor.Create(Self);
+    FTaskCmd.Parent := Self;
   end;
-  FTaskCmd.ShowEditor(gridTasks.SelectedField, gridTasks.SelectedFieldRect.TopLeft);
+  P := gridTasks.ClientToParent(gridTasks.SelectedFieldRect.TopLeft, Self);
+  FTaskCmd.ShowEditor(gridTasks.SelectedField, P);
 end;
 
 procedure TfmMain.gridTasksSelectEditor(Sender: TObject; Column: TColumn;
@@ -243,6 +262,11 @@ procedure TfmMain.miLogClick(Sender: TObject);
 begin
   tsLog.TabVisible := not tsLog.TabVisible;
   if tsLog.TabVisible then tsLog.Show();
+end;
+
+procedure TfmMain.pcEditorsChange(Sender: TObject);
+begin
+  pcEditors.SetFocus();
 end;
 
 procedure TfmMain.UpdateSortIndication(ACol: TColumn);
