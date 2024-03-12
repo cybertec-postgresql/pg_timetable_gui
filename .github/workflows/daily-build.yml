@@ -52,7 +52,7 @@ jobs:
           fi
     
     - name: Publish the daily build
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
           tag_name: daily_builds
           files: |
