@@ -13,7 +13,7 @@ jobs:
         lazarus-versions: [stable] #[dist, stable, 2.0.12, 2.0.10, 2.0.8, 2.0.6]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Install Lazarus
       uses: gcarreno/setup-lazarus@v3.2
