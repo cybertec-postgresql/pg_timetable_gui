@@ -32,7 +32,7 @@ jobs:
       run: lazbuild -B --ws=cocoa "pg_timetable_gui.lpi"
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: pg_timetable_gui for ${{ matrix.operating-system }}
         retention-days: 3
